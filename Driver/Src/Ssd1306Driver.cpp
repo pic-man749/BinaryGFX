@@ -66,20 +66,18 @@ namespace BinaryGFX::Driver {
     const uint8_t cmds[] = {
         CTRL_CMD,                                                     // コントロールバイト: 以降すべてコマンドモード
         CMD_DISPLAY_OFF,                                              // ディスプレイ OFF
-        CMD_SET_CLOCK_DIV,       VAL_CLOCK_DIV,                       // ディスプレイクロック分周比 / 発振周波数
         CMD_SET_MULTIPLEX,       static_cast<uint8_t>(m_height - 1u), // マルチプレクス比（高さ-1）
         CMD_SET_DISPLAY_OFFSET,  0x00u,                               // ディスプレイオフセット = 0
         CMD_SET_START_LINE_0,                                         // ディスプレイスタートライン = 0
-        CMD_CHARGE_PUMP,         VAL_CHARGE_PUMP_ENABLE,              // チャージポンプ有効化
-        CMD_SET_MEMORY_MODE,     VAL_MEMORY_MODE_HORIZONTAL,          // メモリアドレッシングモード: 水平
         CMD_SEG_REMAP,                                                // セグメントリマップ（列127をSEG0へ）
         CMD_COM_SCAN_DEC,                                             // COM出力スキャン方向（COM[N-1]→COM0）
         CMD_SET_COM_PINS,        comPins,                             // COMピンハードウェア構成
         CMD_SET_CONTRAST,        contrast,                            // コントラスト設定
-        CMD_SET_PRECHARGE,       VAL_PRECHARGE,                       // プリチャージ期間
-        CMD_SET_VCOMH,           VAL_VCOMH_DESELECT,                  // VCOMH デセレクトレベル
         CMD_DISPLAY_ALL_ON_RESUME,                                    // 全画面ON無効（GDDRAMに従う）
         CMD_NORMAL_DISPLAY,                                           // 通常表示（反転なし）
+        CMD_SET_CLOCK_DIV,       VAL_CLOCK_DIV,                       // ディスプレイクロック分周比 / 発振周波数
+        CMD_CHARGE_PUMP,         VAL_CHARGE_PUMP_ENABLE,              // チャージポンプ有効化
+        CMD_SET_MEMORY_MODE,     VAL_MEMORY_MODE_HORIZONTAL,          // メモリアドレッシングモード: 水平
         CMD_DEACTIVATE_SCROLL,                                        // スクロール無効
         CMD_DISPLAY_ON,                                               // ディスプレイ ON
     };
