@@ -1,11 +1,11 @@
 /*
- * BinaryGFX.hpp
+ * BinaryGFXCore.hpp
  *
  *      Author: picman
  */
 
-#ifndef USERLIB_BINARYGFX_CORE_INC_BINARYGFX_HPP_
-#define USERLIB_BINARYGFX_CORE_INC_BINARYGFX_HPP_
+#ifndef USERLIB_BINARYGFX_CORE_INC_BINARYGFXCORE_HPP_
+#define USERLIB_BINARYGFX_CORE_INC_BINARYGFXCORE_HPP_
 
 #include <cstdint>
 #include <vector>
@@ -135,4 +135,4 @@ namespace BinaryGFX {
 
 } // namespace BinaryGFX
 
-#endif /* USERLIB_BINARYGFX_CORE_INC_BINARYGFX_HPP_ */
+#endif /* USERLIB_BINARYGFX_CORE_INC_BINARYGFXCORE_HPP_ */

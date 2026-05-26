@@ -22,11 +22,12 @@
 
 ```
 BinaryGFX/
+├── BinaryGFX.hpp               # アンブレラヘッダ（これ1つをincludeすれば全機能利用可）
 ├── Common/
 │   └── Inc/                    # 共通型定義（ErrorCode, ObjectId, PixelState）
 ├── Core/
 │   ├── Inc/
-│   │   ├── BinaryGFX.hpp       # コアクラス
+│   │   ├── BinaryGFXCore.hpp       # コアクラス
 │   │   ├── FrameBuffer.hpp     # フレームバッファ
 │   │   └── Objects/            # グラフィックオブジェクト
 │   └── Src/
@@ -79,10 +80,7 @@ BinaryGFX/
 STM32CubeIDE のプロジェクトプロパティ → **C/C++ Build → Settings → MCU GCC Compiler → Include paths** に以下を追加します。
 
 ```
-../UserLib/BinaryGFX/Core/Inc
-../UserLib/BinaryGFX/Driver/Inc
-../UserLib/BinaryGFX/Hal/Inc
-../UserLib/BinaryGFX/Common/Inc
+../UserLib/BinaryGFX
 ```
 
 ### 2. ソースファイルの追加
@@ -111,10 +109,6 @@ UserLib/BinaryGFX/Hal/Src/Stm32I2c.cpp
 #include <memory>
 #include "i2c.h"
 #include "BinaryGFX.hpp"
-#include "Objects/RectangleObject.hpp"
-#include "Objects/CircleObject.hpp"
-#include "Ssd1306Driver.hpp"
-#include "Stm32I2c.hpp"
 
 // 各層を生成して BinaryGFX へ依存注入する
 auto comm   = std::make_unique<BinaryGFX::Hal::Stm32I2c>(&hi2c1, 100 /*ms*/);
