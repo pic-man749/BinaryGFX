@@ -1,11 +1,11 @@
 /*
- * BinaryGFX.cpp
+ * BinaryGFXCore.cpp
  *
  *      Author: picman
  */
 
 #include <algorithm>
-#include "../Inc/BinaryGFX.hpp"
+#include "../Inc/BinaryGFXCore.hpp"
 
 namespace BinaryGFX {
 
