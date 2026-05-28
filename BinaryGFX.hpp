@@ -27,5 +27,6 @@
 
 // HAL
 #include "Hal/Inc/Stm32I2c.hpp"
+#include "Hal/Inc/Stm32I2cDma.hpp"
 
 #endif /* BINARYGFX_BINARYGFX_HPP_ */
