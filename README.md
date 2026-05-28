@@ -9,12 +9,12 @@
 
 ## 検証済みの環境
 
-| 項目 | 内容 |
-|------|------|
-| 言語 | C++17 |
-| ターゲット | STM32 シリーズ（STM32 HALライブラリ使用） |
-| ディスプレイドライバIC | SSD1306（128×64 / 128×32、I2C 接続） |
-| 開発環境 | STM32CubeIDE 2.0.0 |
+- ディスプレイドライバIC：
+    - SSD1306（128×64、I2C 接続）
+- MCU：
+    - STM32 F401
+- 開発環境：
+    - STM32CubeIDE 2.0.0
 
 ---
 
@@ -22,7 +22,7 @@
 
 ```
 BinaryGFX/
-├── BinaryGFX.hpp               # アンブレラヘッダ（これ1つをincludeすれば全機能利用可）
+├── BinaryGFX.hpp               # アンブレラヘッダ
 ├── Common/
 │   └── Inc/                    # 共通型定義（ErrorCode, ObjectId, PixelState）
 ├── Core/
