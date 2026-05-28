@@ -27,7 +27,7 @@ BinaryGFX/
 │   └── Inc/                    # 共通型定義（ErrorCode, ObjectId, PixelState）
 ├── Core/
 │   ├── Inc/
-│   │   ├── BinaryGFXCore.hpp       # コアクラス
+│   │   ├── BinaryGFXCore.hpp   # コアクラス
 │   │   ├── FrameBuffer.hpp     # フレームバッファ
 │   │   └── Objects/            # グラフィックオブジェクト
 │   └── Src/
@@ -41,6 +41,7 @@ BinaryGFX/
     ├── Inc/
     │   ├── ICommInterface.hpp  # 通信インタフェース
     │   └── Stm32I2c.hpp        # STM32 I2C ラッパー実装
+    │   └── Stm32I2cDma.hpp     # STM32 I2C (DMA) ラッパー実装
     └── Src/
 ```
 
@@ -75,7 +76,50 @@ BinaryGFX/
 
 ## セットアップ
 
-### 1. インクルードパスの追加
+### 1. STM32CubeMX の設定
+
+HAL クラス（`Stm32I2c` / `Stm32I2cDma`）は STM32CubeMX が生成する `i2c.h` をインクルードします。
+STM32CubeMX のコード生成設定で以下の項目を有効にしてください。
+
+**Project Manager → Code Generator**
+
+| 設定項目 | 値 |
+|----------|----|
+| Generate peripheral initialization as a pair of '.c/.h' files per peripheral | チェックを入れる |
+
+これにより、I2C ペリフェラルの初期化コードが `i2c.c` / `i2c.h` として分離生成されます。
+
+#### DMA を使用する場合（`Stm32I2cDma`）
+
+`Stm32I2cDma` を使用する際は、I2C の DMA 転送設定も STM32CubeMX で行う必要があります。
+
+1. **Connectivity → I2C** の設定画面を開く
+2. **DMA Settings** タブで `I2C_TX`（送信方向）の DMA リクエストを追加する
+
+> DMA 転送完了コールバック（`HAL_I2C_MasterTxCpltCallback`）が必要な場合は、アプリケーション側で実装してください。
+
+---
+
+### 2. プリプロセッサマクロの設定
+
+`BinaryGFX.hpp` は `BGFX_USE_STM32` が定義されている場合のみ STM32 向け HAL クラス（`Stm32I2c` / `Stm32I2cDma`）をインクルードします。
+
+STM32CubeIDE でマクロを定義するには、プロジェクトプロパティ → **C/C++ Build → Settings → MCU GCC Compiler → Preprocessor** に以下を追加します。
+
+```
+BGFX_USE_STM32
+```
+
+または、`BinaryGFX.hpp` のインクルード前にソースコード上で定義することもできます。
+
+```cpp
+#define BGFX_USE_STM32
+#include "BinaryGFX.hpp"
+```
+
+---
+
+### 4. インクルードパスの追加
 
 STM32CubeIDE のプロジェクトプロパティ → **C/C++ Build → Settings → MCU GCC Compiler → Include paths** に以下を追加します。
 
@@ -83,7 +127,7 @@ STM32CubeIDE のプロジェクトプロパティ → **C/C++ Build → Settings
 ../UserLib/BinaryGFX
 ```
 
-### 2. ソースファイルの追加
+### 5. ソースファイルの追加
 
 プロジェクトに以下の `.cpp` ファイルが含まれていることを確認してください。STM32CubeIDE ではプロジェクトツリーに追加されていれば自動的にビルド対象になります。
 
