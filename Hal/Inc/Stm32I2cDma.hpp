@@ -8,7 +8,7 @@
 #define BINARYGFX_HAL_INC_STM32I2CDMA_HPP_
 
 #include "ICommInterface.hpp"
-#include "stm32f4xx_hal.h"
+#include "i2c.h"
 #include <vector>
 
 namespace BinaryGFX::Hal {
