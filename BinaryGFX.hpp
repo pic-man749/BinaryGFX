@@ -25,8 +25,13 @@
 // ドライバ
 #include "Driver/Inc/Ssd1306Driver.hpp"
 
-// HAL
+// HAL（共通インタフェース）
+#include "Hal/Inc/ICommInterface.hpp"
+
+// STM32 HAL実装（BGFX_USE_STM32 定義時のみ有効）
+#ifdef BGFX_USE_STM32
 #include "Hal/Inc/Stm32I2c.hpp"
 #include "Hal/Inc/Stm32I2cDma.hpp"
+#endif
 
 #endif /* BINARYGFX_BINARYGFX_HPP_ */
