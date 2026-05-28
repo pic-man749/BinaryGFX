@@ -8,7 +8,7 @@
 #define BINARYGFX_HAL_INC_STM32I2C_HPP_
 
 #include "ICommInterface.hpp"
-#include "stm32f4xx_hal.h"
+#include "i2c.h"
 
 namespace BinaryGFX::Hal {
 
@@ -50,16 +50,6 @@ namespace BinaryGFX::Hal {
       ErrorCode read(uint8_t deviceAddr, uint8_t *data, size_t size) override;
 
     private:
-
-      /**
-       * @brief HAL_StatusTypeDef を ErrorCode にマッピングする
-       *
-       * HAL_ERROR 時は HAL_I2C_GetError() を参照し、NACK か BusError かを判定する。
-       *
-       * @param status HAL 関数の戻り値
-       * @return ErrorCode マッピング後のエラーコード
-       */
-      ErrorCode mapStatus(HAL_StatusTypeDef status) const;
 
       I2C_HandleTypeDef *m_hi2c; /**< I2C ハンドル */
       uint32_t m_timeout; /**< 通信タイムアウト値（ミリ秒） */

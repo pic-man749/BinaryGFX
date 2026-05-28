@@ -83,8 +83,10 @@ namespace BinaryGFX {
       /**
        * @brief フレームバッファを更新してディスプレイへ転送する
        *
-       * フレームバッファをクリアした後、Z値昇順（同値はObjectId昇順）で
-       * 各オブジェクトをレンダリングし、ドライバ経由でディスプレイへ転送する。
+       * デュアルバッファ方式で動作する。
+       * DMA非使用時: レンダリング → 転送 → 返却（ブロッキング）
+       * DMA使用時  : 前フレームDMA完了待ち → レンダリング → 転送開始 → 即返却
+       * (前フレームのDMA転送中にレンダリングが並行実行される)
        *
        * @return ErrorCode 転送結果
        */
@@ -101,16 +103,19 @@ namespace BinaryGFX {
       };
 
       /**
-       * @brief 全オブジェクトをフレームバッファへレンダリングする
+       * @brief 全オブジェクトを指定フレームバッファへレンダリングする
        *
        * Z値昇順（同値はObjectId昇順）でソートして各オブジェクトのrender()を呼び出す。
+       *
+       * @param fb レンダリング先フレームバッファ
        */
-      void renderAll();
+      void renderAll(FrameBuffer &fb);
 
-      std::unique_ptr<Driver::IDisplayDriver> m_driver; /**< ディスプレイドライバ */
-      FrameBuffer m_frameBuffer; /**< フレームバッファ */
-      std::vector<ObjectEntry> m_objects; /**< オブジェクト管理リスト */
-      ObjectId m_nextId; /**< 次に採番するObjectId */
+      std::unique_ptr<Driver::IDisplayDriver> m_driver;  /**< ディスプレイドライバ */
+      FrameBuffer m_frameBuffers[2];                     /**< デュアルフレームバッファ */
+      uint8_t m_activeBuffer;                            /**< 直前のsendBuffer()で使用したバッファインデックス（0 or 1） */
+      std::vector<ObjectEntry> m_objects;                /**< オブジェクト管理リスト */
+      ObjectId m_nextId;                                 /**< 次に採番するObjectId */
   };
 
   template<typename T>
