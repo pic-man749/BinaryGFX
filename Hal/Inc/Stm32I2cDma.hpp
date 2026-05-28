@@ -52,16 +52,6 @@ namespace BinaryGFX::Hal {
 
     private:
 
-      /**
-       * @brief HAL_StatusTypeDef を ErrorCode にマッピングする
-       *
-       * HAL_ERROR 時は HAL_I2C_GetError() を参照し、NACK か BusError かを判定する。
-       *
-       * @param status HAL 関数の戻り値
-       * @return ErrorCode マッピング後のエラーコード
-       */
-      ErrorCode mapStatus(HAL_StatusTypeDef status) const;
-
       I2C_HandleTypeDef *m_hi2c; /**< I2C ハンドル */
       uint32_t m_timeout; /**< 通信タイムアウト値（ミリ秒） */
       std::vector<uint8_t> m_dmaBuf; /**< DMA 転送用バッファ */
