@@ -33,8 +33,7 @@ namespace BinaryGFX {
        * @param pixelState 描画色（デフォルト: 点灯）
        * @param z          Z値（デフォルト: 0）
        */
-      TextObject(int16_t x, int16_t y, const char *text, const FontData *font,
-                 PixelState pixelState = PixelState::On, int16_t z = 0);
+      TextObject(int16_t x, int16_t y, const char *text, const FontData *font, PixelState pixelState = PixelState::On, int16_t z = 0);
 
       /**
        * @brief フレームバッファへ自身を描画する
@@ -95,14 +94,14 @@ namespace BinaryGFX {
 
     private:
 
-      int16_t         m_x;           /**< 描画開始X座標 */
-      int16_t         m_y;           /**< 描画開始Y座標 */
-      const char     *m_text;        /**< 表示文字列ポインタ */
-      const FontData *m_font;        /**< フォントデータポインタ */
-      PixelState      m_pixelState;  /**< 描画色 */
-      uint8_t         m_charSpacing; /**< 文字間スペース（ピクセル） */
-      uint8_t         m_lineSpacing; /**< 行間スペース（ピクセル） */
-      bool            m_wordWrap;    /**< ワードラップ有効フラグ */
+      int16_t m_x; /**< 描画開始X座標 */
+      int16_t m_y; /**< 描画開始Y座標 */
+      const char *m_text; /**< 表示文字列ポインタ */
+      const FontData *m_font; /**< フォントデータポインタ */
+      PixelState m_pixelState; /**< 描画色 */
+      uint8_t m_charSpacing; /**< 文字間スペース（ピクセル） */
+      uint8_t m_lineSpacing; /**< 行間スペース（ピクセル） */
+      bool m_wordWrap; /**< ワードラップ有効フラグ */
 
       /**
        * @brief 1グリフをフレームバッファへ描画する
