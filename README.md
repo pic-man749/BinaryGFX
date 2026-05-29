@@ -24,25 +24,27 @@
 BinaryGFX/
 ├── BinaryGFX.hpp               # アンブレラヘッダ
 ├── Common/
-│   └── Inc/                    # 共通型定義（ErrorCode, ObjectId, PixelState）
+│   ├── Error.hpp               # 共通型定義（ErrorCode, ObjectId）
+│   └── PixelState.hpp          # 共通型定義（PixelState）
 ├── Core/
-│   ├── Inc/
-│   │   ├── BinaryGFXCore.hpp   # コアクラス
-│   │   ├── FrameBuffer.hpp     # フレームバッファ
-│   │   └── Objects/            # グラフィックオブジェクト
-│   └── Src/
-│       └── Objects/
+│   ├── BinaryGFXCore.hpp / .cpp  # コアクラス
+│   ├── FrameBuffer.hpp / .cpp    # フレームバッファ
+│   └── Objects/                  # グラフィックオブジェクト
+│       ├── IGraphicsObject.hpp
+│       ├── PointObject.hpp / .cpp
+│       ├── LineObject.hpp / .cpp
+│       ├── RectangleObject.hpp / .cpp
+│       ├── CircleObject.hpp / .cpp
+│       └── TriangleObject.hpp / .cpp
 ├── Driver/
-│   ├── Inc/
-│   │   ├── IDisplayDriver.hpp  # ドライバインタフェース
-│   │   └── Ssd1306Driver.hpp   # SSD1306 ドライバ実装
-│   └── Src/
+│   ├── IDisplayDriver.hpp        # ドライバインタフェース
+│   └── Ssd1306Driver.hpp / .cpp  # SSD1306 ドライバ実装
 └── Hal/
-    ├── Inc/
-    │   ├── ICommInterface.hpp  # 通信インタフェース
-    │   └── Stm32I2c.hpp        # STM32 I2C ラッパー実装
-    │   └── Stm32I2cDma.hpp     # STM32 I2C (DMA) ラッパー実装
-    └── Src/
+    ├── ICommInterface.hpp        # 通信インタフェース
+    ├── Stm32I2c.hpp / .cpp       # STM32 I2C ラッパー実装
+    ├── Stm32I2cDma.hpp / .cpp    # STM32 I2C (DMA) ラッパー実装
+    └── Helper/
+        └── I2cHelper.hpp / .cpp  # I2C ステータス変換ヘルパー
 ```
 
 ---
@@ -124,7 +126,7 @@ BGFX_USE_STM32
 STM32CubeIDE のプロジェクトプロパティ → **C/C++ Build → Settings → MCU GCC Compiler → Include paths** に以下を追加します。
 
 ```
-../UserLib/BinaryGFX
+BinaryGFX
 ```
 
 ### 5. ソースファイルの追加
@@ -132,15 +134,16 @@ STM32CubeIDE のプロジェクトプロパティ → **C/C++ Build → Settings
 プロジェクトに以下の `.cpp` ファイルが含まれていることを確認してください。STM32CubeIDE ではプロジェクトツリーに追加されていれば自動的にビルド対象になります。
 
 ```
-UserLib/BinaryGFX/Core/Src/BinaryGFX.cpp
-UserLib/BinaryGFX/Core/Src/FrameBuffer.cpp
-UserLib/BinaryGFX/Core/Src/Objects/PointObject.cpp
-UserLib/BinaryGFX/Core/Src/Objects/LineObject.cpp
-UserLib/BinaryGFX/Core/Src/Objects/RectangleObject.cpp
-UserLib/BinaryGFX/Core/Src/Objects/CircleObject.cpp
-UserLib/BinaryGFX/Core/Src/Objects/TriangleObject.cpp
-UserLib/BinaryGFX/Driver/Src/Ssd1306Driver.cpp
-UserLib/BinaryGFX/Hal/Src/Stm32I2c.cpp
+BinaryGFX/Core/BinaryGFXCore.cpp
+BinaryGFX/Core/FrameBuffer.cpp
+BinaryGFX/Core/Objects/PointObject.cpp
+BinaryGFX/Core/Objects/LineObject.cpp
+BinaryGFX/Core/Objects/RectangleObject.cpp
+BinaryGFX/Core/Objects/CircleObject.cpp
+BinaryGFX/Core/Objects/TriangleObject.cpp
+BinaryGFX/Driver/Ssd1306Driver.cpp
+BinaryGFX/Hal/Stm32I2c.cpp
+BinaryGFX/Hal/Helper/I2cHelper.cpp
 ```
 
 ---
