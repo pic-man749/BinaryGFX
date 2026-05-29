@@ -22,7 +22,7 @@ namespace BinaryGFX {
     int16_t curY = m_y;
     const char *p = m_text;
     const int32_t fbWidth = static_cast<int32_t>(fb.getWidth());
-    const uin8_t lastChar = m_font->firstChar + m_font->charCount;
+    const uint8_t lastChar = m_font->firstChar + m_font->charCount;
 
     while(*p != '\0') {
       const uint8_t c = static_cast<uint8_t>(*p++);
