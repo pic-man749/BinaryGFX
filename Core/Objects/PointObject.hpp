@@ -4,8 +4,8 @@
  *      Author: picman
  */
 
-#ifndef USERLIB_BINARYGFX_CORE_INC_OBJECTS_POINTOBJECT_HPP_
-#define USERLIB_BINARYGFX_CORE_INC_OBJECTS_POINTOBJECT_HPP_
+#ifndef BINARYGFX_CORE_OBJECTS_POINTOBJECT_HPP_
+#define BINARYGFX_CORE_OBJECTS_POINTOBJECT_HPP_
 
 #include "IGraphicsObject.hpp"
 #include "../../Common/PixelState.hpp"
@@ -61,4 +61,4 @@ namespace BinaryGFX {
 
 } // namespace BinaryGFX
 
-#endif /* USERLIB_BINARYGFX_CORE_INC_OBJECTS_POINTOBJECT_HPP_ */
+#endif /* BINARYGFX_CORE_OBJECTS_POINTOBJECT_HPP_ */

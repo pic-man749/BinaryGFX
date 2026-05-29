@@ -4,8 +4,8 @@
  *      Author: picman
  */
 
-#ifndef USERLIB_BINARYGFX_HAL_INC_ICOMMINTERFACE_HPP_
-#define USERLIB_BINARYGFX_HAL_INC_ICOMMINTERFACE_HPP_
+#ifndef BINARYGFX_HAL_ICOMMINTERFACE_HPP_
+#define BINARYGFX_HAL_ICOMMINTERFACE_HPP_
 
 #include <cstdint>
 #include <cstddef>
@@ -47,4 +47,4 @@ namespace BinaryGFX::Hal {
 
 } // namespace BinaryGFX::Hal
 
-#endif /* USERLIB_BINARYGFX_HAL_INC_ICOMMINTERFACE_HPP_ */
+#endif /* BINARYGFX_HAL_ICOMMINTERFACE_HPP_ */

@@ -4,8 +4,8 @@
  *      Author: picman
  */
 
-#ifndef BINARYGFX_HAL_HELPER_INC_I2CHELPER_HPP_
-#define BINARYGFX_HAL_HELPER_INC_I2CHELPER_HPP_
+#ifndef BINARYGFX_HAL_HELPER_I2CHELPER_HPP_
+#define BINARYGFX_HAL_HELPER_I2CHELPER_HPP_
 
 #include "../../Common/Error.hpp"
 #include "i2c.h"
@@ -25,4 +25,4 @@ namespace BinaryGFX::Hal {
 
 } // namespace BinaryGFX::Hal
 
-#endif /* BINARYGFX_HAL_HELPER_INC_I2CHELPER_HPP_ */
+#endif /* BINARYGFX_HAL_HELPER_I2CHELPER_HPP_ */

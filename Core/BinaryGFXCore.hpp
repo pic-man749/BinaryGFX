@@ -4,8 +4,8 @@
  *      Author: picman
  */
 
-#ifndef USERLIB_BINARYGFX_CORE_INC_BINARYGFXCORE_HPP_
-#define USERLIB_BINARYGFX_CORE_INC_BINARYGFXCORE_HPP_
+#ifndef BINARYGFX_CORE_BINARYGFXCORE_HPP_
+#define BINARYGFX_CORE_BINARYGFXCORE_HPP_
 
 #include <cstdint>
 #include <vector>
@@ -140,4 +140,4 @@ namespace BinaryGFX {
 
 } // namespace BinaryGFX
 
-#endif /* USERLIB_BINARYGFX_CORE_INC_BINARYGFXCORE_HPP_ */
+#endif /* BINARYGFX_CORE_BINARYGFXCORE_HPP_ */

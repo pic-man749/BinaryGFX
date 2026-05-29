@@ -4,8 +4,8 @@
  *      Author: picman
  */
 
-#ifndef USERLIB_BINARYGFX_DRIVER_INC_IDISPLAYDRIVER_HPP_
-#define USERLIB_BINARYGFX_DRIVER_INC_IDISPLAYDRIVER_HPP_
+#ifndef BINARYGFX_DRIVER_IDISPLAYDRIVER_HPP_
+#define BINARYGFX_DRIVER_IDISPLAYDRIVER_HPP_
 
 #include <cstdint>
 #include <cstddef>
@@ -72,4 +72,4 @@ namespace BinaryGFX::Driver {
 
 } // namespace BinaryGFX::Driver
 
-#endif /* USERLIB_BINARYGFX_DRIVER_INC_IDISPLAYDRIVER_HPP_ */
+#endif /* BINARYGFX_DRIVER_IDISPLAYDRIVER_HPP_ */

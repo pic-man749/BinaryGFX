@@ -4,8 +4,8 @@
  *      Author: picman
  */
 
-#ifndef USERLIB_BINARYGFX_COMMON_INC_ERROR_HPP_
-#define USERLIB_BINARYGFX_COMMON_INC_ERROR_HPP_
+#ifndef BINARYGFX_COMMON_ERROR_HPP_
+#define BINARYGFX_COMMON_ERROR_HPP_
 
 #include <cstdint>
 
@@ -34,4 +34,4 @@ namespace BinaryGFX {
 
 } // namespace BinaryGFX
 
-#endif /* USERLIB_BINARYGFX_COMMON_INC_ERROR_HPP_ */
+#endif /* BINARYGFX_COMMON_ERROR_HPP_ */

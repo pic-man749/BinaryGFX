@@ -4,8 +4,8 @@
  *      Author: picman
  */
 
-#ifndef BINARYGFX_DRIVER_INC_SSD1306DRIVER_HPP_
-#define BINARYGFX_DRIVER_INC_SSD1306DRIVER_HPP_
+#ifndef BINARYGFX_DRIVER_SSD1306DRIVER_HPP_
+#define BINARYGFX_DRIVER_SSD1306DRIVER_HPP_
 
 #include <cstdint>
 #include <memory>
@@ -106,4 +106,4 @@ namespace BinaryGFX::Driver {
 
 } // namespace BinaryGFX::Driver
 
-#endif /* BINARYGFX_DRIVER_INC_SSD1306DRIVER_HPP_ */
+#endif /* BINARYGFX_DRIVER_SSD1306DRIVER_HPP_ */

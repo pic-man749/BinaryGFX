@@ -4,8 +4,8 @@
  *      Author: picman
  */
 
-#ifndef BINARYGFX_HAL_INC_STM32I2C_HPP_
-#define BINARYGFX_HAL_INC_STM32I2C_HPP_
+#ifndef BINARYGFX_HAL_STM32I2C_HPP_
+#define BINARYGFX_HAL_STM32I2C_HPP_
 
 #include "ICommInterface.hpp"
 #include "i2c.h"
@@ -57,4 +57,4 @@ namespace BinaryGFX::Hal {
 
 } // namespace BinaryGFX::Hal
 
-#endif /* BINARYGFX_HAL_INC_STM32I2C_HPP_ */
+#endif /* BINARYGFX_HAL_STM32I2C_HPP_ */

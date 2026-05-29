@@ -4,8 +4,8 @@
  *      Author: picman
  */
 
-#ifndef USERLIB_BINARYGFX_CORE_INC_FRAMEBUFFER_HPP_
-#define USERLIB_BINARYGFX_CORE_INC_FRAMEBUFFER_HPP_
+#ifndef BINARYGFX_CORE_FRAMEBUFFER_HPP_
+#define BINARYGFX_CORE_FRAMEBUFFER_HPP_
 
 #include <cstdint>
 #include <cstddef>
@@ -98,4 +98,4 @@ namespace BinaryGFX {
 
 } // namespace BinaryGFX
 
-#endif /* USERLIB_BINARYGFX_CORE_INC_FRAMEBUFFER_HPP_ */
+#endif /* BINARYGFX_CORE_FRAMEBUFFER_HPP_ */
