@@ -5,7 +5,7 @@
  */
 
 #include <vector>
-#include "../Inc/Ssd1306Driver.hpp"
+#include "Ssd1306Driver.hpp"
 
 namespace {
 

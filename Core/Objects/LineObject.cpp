@@ -5,8 +5,8 @@
  */
 
 #include <cstdlib>
-#include "../../Inc/Objects/LineObject.hpp"
-#include "../../Inc/FrameBuffer.hpp"
+#include "LineObject.hpp"
+#include "../FrameBuffer.hpp"
 
 namespace BinaryGFX {
 

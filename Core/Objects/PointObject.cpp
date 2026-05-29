@@ -4,8 +4,8 @@
  *      Author: picman
  */
 
-#include "../../Inc/Objects/PointObject.hpp"
-#include "../../Inc/FrameBuffer.hpp"
+#include "PointObject.hpp"
+#include "../FrameBuffer.hpp"
 
 namespace BinaryGFX {
 

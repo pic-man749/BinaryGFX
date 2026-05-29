@@ -9,7 +9,7 @@
 
 #include <cstdint>
 #include <cstddef>
-#include "../../Common/Inc/Error.hpp"
+#include "../Common/Error.hpp"
 
 namespace BinaryGFX::Hal {
 

@@ -10,7 +10,7 @@
 #include <cstdint>
 #include <memory>
 #include "IDisplayDriver.hpp"
-#include "../../Hal/Inc/ICommInterface.hpp"
+#include "../Hal/ICommInterface.hpp"
 
 namespace BinaryGFX::Driver {
 

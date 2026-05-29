@@ -4,8 +4,8 @@
  *      Author: picman
  */
 
-#include "../../Inc/Objects/CircleObject.hpp"
-#include "../../Inc/FrameBuffer.hpp"
+#include "CircleObject.hpp"
+#include "../FrameBuffer.hpp"
 
 namespace BinaryGFX {
 

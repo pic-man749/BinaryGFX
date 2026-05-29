@@ -5,8 +5,8 @@
  */
 
 #include <climits>
-#include "../Inc/Stm32I2c.hpp"
-#include "../Helper/Inc/I2cHelper.hpp"
+#include "Stm32I2c.hpp"
+#include "Helper/I2cHelper.hpp"
 
 namespace BinaryGFX::Hal {
 

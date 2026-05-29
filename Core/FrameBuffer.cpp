@@ -4,7 +4,7 @@
  *      Author: picman
  */
 
-#include "../Inc/FrameBuffer.hpp"
+#include "FrameBuffer.hpp"
 
 namespace BinaryGFX {
 

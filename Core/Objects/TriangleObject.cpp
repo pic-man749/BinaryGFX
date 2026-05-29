@@ -6,8 +6,8 @@
 
 #include <cstdlib>
 #include <cstdint>
-#include "../../Inc/Objects/TriangleObject.hpp"
-#include "../../Inc/FrameBuffer.hpp"
+#include "TriangleObject.hpp"
+#include "../FrameBuffer.hpp"
 
 namespace BinaryGFX {
 

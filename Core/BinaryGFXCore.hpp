@@ -12,8 +12,8 @@
 #include <memory>
 #include "FrameBuffer.hpp"
 #include "Objects/IGraphicsObject.hpp"
-#include "../../Common/Inc/Error.hpp"
-#include "../../Driver/Inc/IDisplayDriver.hpp"
+#include "../Common/Error.hpp"
+#include "../Driver/IDisplayDriver.hpp"
 
 namespace BinaryGFX {
 

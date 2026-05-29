@@ -7,8 +7,7 @@
 #ifndef BINARYGFX_HAL_HELPER_INC_I2CHELPER_HPP_
 #define BINARYGFX_HAL_HELPER_INC_I2CHELPER_HPP_
 
-#include "../Inc/I2cHelper.hpp"
-#include "../../../Common/Inc/Error.hpp"
+#include "../../Common/Error.hpp"
 #include "i2c.h"
 
 namespace BinaryGFX::Hal {

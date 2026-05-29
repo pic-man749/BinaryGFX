@@ -8,7 +8,7 @@
 #define USERLIB_BINARYGFX_CORE_INC_OBJECTS_TRIANGLEOBJECT_HPP_
 
 #include "IGraphicsObject.hpp"
-#include "../../../Common/Inc/PixelState.hpp"
+#include "../../Common/PixelState.hpp"
 
 namespace BinaryGFX {
 

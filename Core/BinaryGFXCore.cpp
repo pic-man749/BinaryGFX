@@ -5,7 +5,7 @@
  */
 
 #include <algorithm>
-#include "../Inc/BinaryGFXCore.hpp"
+#include "BinaryGFXCore.hpp"
 
 namespace BinaryGFX {
 

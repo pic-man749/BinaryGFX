@@ -4,8 +4,8 @@
  *      Author: picman
  */
 #include <climits>
-#include "../Inc/Stm32I2cDma.hpp"
-#include "../Helper/Inc/I2cHelper.hpp"
+#include "Stm32I2cDma.hpp"
+#include "Helper/I2cHelper.hpp"
 
 namespace BinaryGFX::Hal {
 

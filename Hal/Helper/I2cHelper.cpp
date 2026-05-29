@@ -4,7 +4,7 @@
  *      Author: picman
  */
 
-#include "../Inc/I2cHelper.hpp"
+#include "I2cHelper.hpp"
 
 namespace BinaryGFX::Hal {
 

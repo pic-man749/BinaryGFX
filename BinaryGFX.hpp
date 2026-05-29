@@ -8,30 +8,30 @@
 #define BINARYGFX_BINARYGFX_HPP_
 
 // 共通型（ErrorCode, ObjectId, PixelState）
-#include "Common/Inc/Error.hpp"
-#include "Common/Inc/PixelState.hpp"
+#include "Common/Error.hpp"
+#include "Common/PixelState.hpp"
 
 // コア
-#include "Core/Inc/BinaryGFXCore.hpp"
+#include "Core/BinaryGFXCore.hpp"
 
 // グラフィックオブジェクト
-#include "Core/Inc/Objects/IGraphicsObject.hpp"
-#include "Core/Inc/Objects/PointObject.hpp"
-#include "Core/Inc/Objects/LineObject.hpp"
-#include "Core/Inc/Objects/RectangleObject.hpp"
-#include "Core/Inc/Objects/CircleObject.hpp"
-#include "Core/Inc/Objects/TriangleObject.hpp"
+#include "Core/Objects/IGraphicsObject.hpp"
+#include "Core/Objects/PointObject.hpp"
+#include "Core/Objects/LineObject.hpp"
+#include "Core/Objects/RectangleObject.hpp"
+#include "Core/Objects/CircleObject.hpp"
+#include "Core/Objects/TriangleObject.hpp"
 
 // ドライバ
-#include "Driver/Inc/Ssd1306Driver.hpp"
+#include "Driver/Ssd1306Driver.hpp"
 
 // HAL（共通インタフェース）
-#include "Hal/Inc/ICommInterface.hpp"
+#include "Hal/ICommInterface.hpp"
 
 // STM32 HAL実装（BGFX_USE_STM32 定義時のみ有効）
 #ifdef BGFX_USE_STM32
-#include "Hal/Inc/Stm32I2c.hpp"
-#include "Hal/Inc/Stm32I2cDma.hpp"
+#include "Hal/Stm32I2c.hpp"
+#include "Hal/Stm32I2cDma.hpp"
 #endif
 
 #endif /* BINARYGFX_BINARYGFX_HPP_ */

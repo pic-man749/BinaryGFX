@@ -10,7 +10,7 @@
 #include <cstdint>
 #include <cstddef>
 #include <vector>
-#include "../../Common/Inc/PixelState.hpp"
+#include "../Common/PixelState.hpp"
 
 namespace BinaryGFX {
 
