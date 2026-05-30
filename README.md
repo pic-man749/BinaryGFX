@@ -29,13 +29,17 @@ BinaryGFX/
 ├── Core/
 │   ├── BinaryGFXCore.hpp / .cpp  # コアクラス
 │   ├── FrameBuffer.hpp / .cpp    # フレームバッファ
+│   ├── Font/
+│   │   ├── FontData.hpp          # フォントデータ構造体
+│   │   └── BgfxFont_Ascii.hpp    # デフォルトのフォント
 │   └── Objects/                  # グラフィックオブジェクト
 │       ├── IGraphicsObject.hpp
 │       ├── PointObject.hpp / .cpp
 │       ├── LineObject.hpp / .cpp
 │       ├── RectangleObject.hpp / .cpp
 │       ├── CircleObject.hpp / .cpp
-│       └── TriangleObject.hpp / .cpp
+│       ├── TriangleObject.hpp / .cpp
+│       └── TextObject.hpp / .cpp
 ├── Driver/
 │   ├── IDisplayDriver.hpp        # ドライバインタフェース
 │   └── Ssd1306Driver.hpp / .cpp  # SSD1306 ドライバ実装
@@ -141,6 +145,7 @@ BinaryGFX/Core/Objects/LineObject.cpp
 BinaryGFX/Core/Objects/RectangleObject.cpp
 BinaryGFX/Core/Objects/CircleObject.cpp
 BinaryGFX/Core/Objects/TriangleObject.cpp
+BinaryGFX/Core/Objects/TextObject.cpp
 BinaryGFX/Driver/Ssd1306Driver.cpp
 BinaryGFX/Hal/Stm32I2c.cpp
 BinaryGFX/Hal/Helper/I2cHelper.cpp
@@ -179,6 +184,46 @@ auto circleId = gfx->addObject(
 gfx->update();
 ```
 
+### テキストの表示
+
+テキストを表示するには、`FontData` 構造体でフォントデータを定義した上で `TextObject` を追加します。
+
+```cpp
+// フォントデータ定義（縦ページ形式・LSB が上端・列優先）
+// 1グリフ = glyphWidth × ceil(glyphHeight/8) バイト
+// データ配置: [col0_page0, col0_page1, ..., col1_page0, ...]
+constexpr uint8_t myFontData[] = {
+    // ' ' (0x20)
+    0x00, 0x00, 0x00, 0x00, 0x00,
+    // '!' (0x21)
+    0x00, 0x00, 0x5F, 0x00, 0x00,
+    // ... 以降 0x7E まで続く
+};
+
+// typedef struct のため struct キーワード不要
+constexpr BinaryGFX::FontData myFont = {
+    5,           // glyphWidth  (ピクセル)
+    8,           // glyphHeight (ピクセル)
+    0x20,        // firstChar
+    95,          // charCount   (0x20〜0x7E)
+    myFontData
+};
+
+// TextObject を追加する（ワードラップはデフォルトで有効）
+gfx->addObject(std::make_unique<BinaryGFX::TextObject>(0, 0, "Hello!", &myFont));
+
+// 文字間・行間スペースやワードラップはセッターで設定できる
+auto id = gfx->addObject(std::make_unique<BinaryGFX::TextObject>(0, 16, "Line1\nLine2", &myFont));
+auto* text = gfx->getObjectById<BinaryGFX::TextObject>(id);
+if(text) {
+    text->setCharSpacing(2);   // 文字間 2px
+    text->setLineSpacing(2);   // 行間 2px
+    text->setWordWrap(false);  // ワードラップ無効（デフォルト: 有効）
+}
+
+gfx->update();
+```
+
 ### アニメーション（オブジェクトの更新）
 
 `addObject()` が返す `ObjectId` を使ってオブジェクトを取得し、プロパティを変更してから再描画できます。
@@ -202,6 +247,7 @@ gfx->update(); // 変更を反映して転送
 | `RectangleObject` | 矩形 | `setPosition()`, `setSize()`, `setPixelState()`, `setFilled()` |
 | `CircleObject` | 円 | `setCenter()`, `setRadius()`, `setPixelState()`, `setFilled()` |
 | `TriangleObject` | 三角形 | `setVertices()`, `setPixelState()`, `setFilled()` |
+| `TextObject` | テキスト | `setPosition()`, `setText()`, `setFont()`, `setPixelState()`, `setCharSpacing()`, `setLineSpacing()`, `setWordWrap()` |
 
 すべてのオブジェクトに共通の `setZ(int16_t z)` で描画順を制御できます。Z 値が小さいオブジェクトほど先に描画されます。
 

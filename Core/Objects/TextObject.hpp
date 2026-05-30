@@ -102,6 +102,15 @@ namespace BinaryGFX {
       uint8_t m_charSpacing; /**< 文字間スペース（ピクセル） */
       uint8_t m_lineSpacing; /**< 行間スペース（ピクセル） */
       bool m_wordWrap; /**< ワードラップ有効フラグ */
+      uint8_t m_pagesPerCol; /**< グリフ1列あたりのページ数（= ceil(glyphHeight / 8)） */
+      uint16_t m_bytesPerGlyph; /**< グリフ1文字のデータサイズ（バイト） */
+
+      /**
+       * @brief フォントメトリクスをキャッシュする
+       *
+       * コンストラクタおよび setFont() から呼び出す。
+       */
+      void updateFontMetrics();
 
       /**
        * @brief 1グリフをフレームバッファへ描画する

@@ -11,6 +11,7 @@ namespace BinaryGFX {
 
   TextObject::TextObject(int16_t x, int16_t y, const char *text, const FontData *font, PixelState pixelState, int16_t z) :
       IGraphicsObject(z), m_x(x), m_y(y), m_text(text), m_font(font), m_pixelState(pixelState), m_charSpacing(1u), m_lineSpacing(1u), m_wordWrap(true) {
+    updateFontMetrics();
   }
 
   void TextObject::render(FrameBuffer &fb) const {
@@ -50,22 +51,18 @@ namespace BinaryGFX {
 
   void TextObject::drawGlyph(FrameBuffer &fb, int16_t x, int16_t y, uint8_t c) const {
     const uint8_t glyphIndex = static_cast<uint8_t>(c - m_font->firstChar);
-    const uint8_t pagesPerCol = static_cast<uint8_t>((m_font->glyphHeight + 7u) / 8u);
-    const uint16_t bytesPerGlyph = static_cast<uint16_t>(m_font->glyphWidth) * pagesPerCol;
-    const uint32_t glyphOffset = static_cast<uint32_t>(glyphIndex) * bytesPerGlyph;
+    const uint32_t glyphOffset = static_cast<uint32_t>(glyphIndex) * m_bytesPerGlyph;
 
     for(uint8_t col = 0u; col < m_font->glyphWidth; ++col) {
-      for(uint8_t page = 0u; page < pagesPerCol; ++page) {
-        const uint8_t byte = m_font->data[glyphOffset + col * pagesPerCol + page];
-        for(uint8_t bit = 0u; bit < 8u; ++bit) {
-          const uint8_t row = static_cast<uint8_t>(page * 8u + bit);
-          if(row >= m_font->glyphHeight) {
-            break;
-          }
-          if((byte >> bit) & 0x01u) {
-            fb.setPixel(static_cast<int16_t>(x + col), static_cast<int16_t>(y + row), m_pixelState);
-          }
-        }
+      for(uint8_t page = 0u; page < m_pagesPerCol; ++page) {
+        const uint8_t byte = m_font->data[glyphOffset + col * m_pagesPerCol + page];
+        if(byte == 0x00u) continue; // 空白列はスキップ
+        fb.setPage(
+          static_cast<int16_t>(x + col),
+          static_cast<int16_t>(y + page * PIXELS_PER_BYTE),
+          byte,
+          m_pixelState
+        );
       }
     }
   }
@@ -81,6 +78,18 @@ namespace BinaryGFX {
 
   void TextObject::setFont(const FontData *font) {
     m_font = font;
+    updateFontMetrics();
+  }
+
+  void TextObject::updateFontMetrics() {
+    if(m_font == nullptr) {
+      m_pagesPerCol = 0u;
+      m_bytesPerGlyph = 0u;
+      return;
+    }
+    // +7 は切り上げ除算（ceil(h/8)）のオフセット
+    m_pagesPerCol = static_cast<uint8_t>((m_font->glyphHeight + 7u) / PIXELS_PER_BYTE);
+    m_bytesPerGlyph = static_cast<uint16_t>(m_font->glyphWidth) * m_pagesPerCol;
   }
 
   void TextObject::setPixelState(PixelState pixelState) {
