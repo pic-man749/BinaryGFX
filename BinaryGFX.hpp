@@ -14,6 +14,9 @@
 // コア
 #include "Core/BinaryGFXCore.hpp"
 
+// フォント
+#include "Core/Font/FontData.hpp"
+
 // グラフィックオブジェクト
 #include "Core/Objects/IGraphicsObject.hpp"
 #include "Core/Objects/PointObject.hpp"
@@ -21,6 +24,10 @@
 #include "Core/Objects/RectangleObject.hpp"
 #include "Core/Objects/CircleObject.hpp"
 #include "Core/Objects/TriangleObject.hpp"
+#include "Core/Objects/TextObject.hpp"
+
+// フォント
+#include "Core/Font/BgfxFont_Ascii.hpp"
 
 // ドライバ
 #include "Driver/Ssd1306Driver.hpp"

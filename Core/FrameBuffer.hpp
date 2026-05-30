@@ -14,6 +14,8 @@
 
 namespace BinaryGFX {
 
+  static const uint32_t PIXELS_PER_BYTE = 8u; /**< 1バイトあたりのピクセル数（SSD1306の縦ページ形式に基づく） */
+
   /**
    * @brief フレームバッファ
    *
@@ -42,6 +44,20 @@ namespace BinaryGFX {
        * @param pixelState  点灯状態
        */
       void setPixel(int16_t x, int16_t y, PixelState pixelState);
+
+      /**
+       * @brief 指定座標のページ（縦8ピクセル）に1バイトを書き込む
+       *
+       * ページ全体(1byte)を更新する。
+       * y 座標が8の倍数でない場合、隣接ページに分割して書き込む。
+       * 範囲外の座標は無視する。
+       *
+       * @param x          X座標
+       * @param y          Y座標
+       * @param byte       書き込む8ピクセル分のビットマスク（LSB=上端）
+       * @param pixelState 点灯状態
+       */
+      void setPage(int16_t x, int16_t y, uint8_t byte, PixelState pixelState);
 
       /**
        * @brief 指定座標のピクセル状態を取得する

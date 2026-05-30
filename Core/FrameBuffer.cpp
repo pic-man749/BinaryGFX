@@ -25,6 +25,42 @@ namespace BinaryGFX {
     }
   }
 
+  void FrameBuffer::setPage(int16_t x, int16_t y, uint8_t byte, PixelState pixelState) {
+    if(x < 0 || x >= static_cast<int16_t>(m_width) || y < 0) {
+      return;
+    }
+
+    const size_t page0    = static_cast<size_t>(y) / PIXELS_PER_BYTE;
+    const size_t bufPages = static_cast<size_t>(m_height) / PIXELS_PER_BYTE;
+    if(page0 >= bufPages) {
+      return;
+    }
+
+    const uint8_t offset = static_cast<uint8_t>(static_cast<uint8_t>(y) % PIXELS_PER_BYTE);
+    const size_t  xIdx   = static_cast<size_t>(x);
+
+    // 現在のページへの書き込み（byte を offset ビット上方シフト）
+    const uint8_t loByte = static_cast<uint8_t>(byte << offset);
+    if(pixelState == PixelState::On) {
+      m_buffer[page0 * m_width + xIdx] |= loByte;
+    } else {
+      m_buffer[page0 * m_width + xIdx] &= static_cast<uint8_t>(~loByte);
+    }
+
+    // 非アライメント時は次のページにはみ出したビットを書き込む
+    if(offset > 0u) {
+      const size_t  page1  = page0 + 1u;
+      const uint8_t hiByte = static_cast<uint8_t>(byte >> (PIXELS_PER_BYTE - offset));
+      if(hiByte != 0x00u && page1 < bufPages) {
+        if(pixelState == PixelState::On) {
+          m_buffer[page1 * m_width + xIdx] |= hiByte;
+        } else {
+          m_buffer[page1 * m_width + xIdx] &= static_cast<uint8_t>(~hiByte);
+        }
+      }
+    }
+  }
+
   bool FrameBuffer::getPixel(int16_t x, int16_t y) const {
     if(x < 0 || x >= static_cast<int16_t>(m_width) || y < 0 || y >= static_cast<int16_t>(m_height)) {
       return false;
