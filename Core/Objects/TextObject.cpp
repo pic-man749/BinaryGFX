@@ -9,8 +9,10 @@
 
 namespace BinaryGFX {
 
-  TextObject::TextObject(int16_t x, int16_t y, const char *text, const FontData *font, PixelState pixelState, int16_t z) :
-      IGraphicsObject(z), m_x(x), m_y(y), m_text(text), m_font(font), m_pixelState(pixelState), m_charSpacing(1u), m_lineSpacing(1u), m_wordWrap(true) {
+  TextObject::TextObject(int16_t x, int16_t y, const char *text, const FontData *font,
+      PixelState pixelState, int16_t z) :
+      IGraphicsObject(z), m_x(x), m_y(y), m_text(text), m_font(font), m_pixelState(pixelState),
+      m_charSpacing(1u), m_lineSpacing(0u), m_wordWrap(true) {
     updateFontMetrics();
   }
 
@@ -57,12 +59,8 @@ namespace BinaryGFX {
       for(uint8_t page = 0u; page < m_pagesPerCol; ++page) {
         const uint8_t byte = m_font->data[glyphOffset + col * m_pagesPerCol + page];
         if(byte == 0x00u) continue; // 空白列はスキップ
-        fb.setPage(
-          static_cast<int16_t>(x + col),
-          static_cast<int16_t>(y + page * PIXELS_PER_BYTE),
-          byte,
-          m_pixelState
-        );
+        fb.setPage(static_cast<int16_t>(x + col), static_cast<int16_t>(y + page * PIXELS_PER_BYTE),
+            byte, m_pixelState);
       }
     }
   }
