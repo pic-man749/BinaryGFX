@@ -17,6 +17,9 @@
 // フォント
 #include "Core/Font/FontData.hpp"
 
+// バイナリ画像
+#include "Core/Binary/BinaryData.hpp"
+
 // グラフィックオブジェクト
 #include "Core/Objects/IGraphicsObject.hpp"
 #include "Core/Objects/PointObject.hpp"
@@ -25,6 +28,7 @@
 #include "Core/Objects/CircleObject.hpp"
 #include "Core/Objects/TriangleObject.hpp"
 #include "Core/Objects/TextObject.hpp"
+#include "Core/Objects/BinaryObject.hpp"
 
 // フォント
 #include "Core/Font/BgfxFont_Ascii.hpp"
