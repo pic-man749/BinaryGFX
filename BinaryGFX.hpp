@@ -28,6 +28,7 @@
 #include "Core/Objects/CircleObject.hpp"
 #include "Core/Objects/TriangleObject.hpp"
 #include "Core/Objects/TextObject.hpp"
+#include "Core/Objects/StringObject.hpp"
 #include "Core/Objects/BinaryObject.hpp"
 
 // フォント
