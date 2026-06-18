@@ -25,6 +25,7 @@
 #include "Core/Objects/CircleObject.hpp"
 #include "Core/Objects/TriangleObject.hpp"
 #include "Core/Objects/TextObject.hpp"
+#include "Core/Objects/StringObject.hpp"
 
 // フォント
 #include "Core/Font/BgfxFont_Ascii.hpp"
