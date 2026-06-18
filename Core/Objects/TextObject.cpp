@@ -36,17 +36,23 @@ namespace BinaryGFX {
         continue;
       }
 
+      // \r\n 改行コードに対応するため \r をスキップ
+      if(c == '\r') {
+        continue;
+      }
+
+      // 対応文字コード範囲外の文字はカーソルを進めずスキップ
+      if(c < m_font->firstChar || c >= lastChar) {
+        continue;
+      }
+
       // ワードラップ判定: 次の文字が画面幅を超える場合に折り返す
       if(m_wordWrap && (static_cast<int32_t>(curX) + m_font->glyphWidth > fbWidth)) {
         curX = m_x;
         curY = static_cast<int16_t>(curY + m_font->glyphHeight + m_lineSpacing);
       }
 
-      // 対応文字コード範囲のみ描画
-      if(m_font->firstChar <= c && c < lastChar) {
-        drawGlyph(fb, curX, curY, c);
-      }
-
+      drawGlyph(fb, curX, curY, c);
       curX = static_cast<int16_t>(curX + m_font->glyphWidth + m_charSpacing);
     }
   }

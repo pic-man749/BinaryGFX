@@ -32,6 +32,8 @@ BinaryGFX/
 │   ├── Font/
 │   │   ├── FontData.hpp          # フォントデータ構造体
 │   │   └── BgfxFont_Ascii.hpp    # デフォルトのフォント
+│   ├── Binary/
+│   │   └── BinaryData.hpp        # バイナリ画像データ構造体
 │   └── Objects/                  # グラフィックオブジェクト
 │       ├── IGraphicsObject.hpp
 │       ├── PointObject.hpp / .cpp
@@ -39,7 +41,8 @@ BinaryGFX/
 │       ├── RectangleObject.hpp / .cpp
 │       ├── CircleObject.hpp / .cpp
 │       ├── TriangleObject.hpp / .cpp
-│       └── TextObject.hpp / .cpp
+│       ├── TextObject.hpp / .cpp
+│       └── BinaryObject.hpp / .cpp
 ├── Driver/
 │   ├── IDisplayDriver.hpp        # ドライバインタフェース
 │   └── Ssd1306Driver.hpp / .cpp  # SSD1306 ドライバ実装
@@ -146,6 +149,7 @@ BinaryGFX/Core/Objects/RectangleObject.cpp
 BinaryGFX/Core/Objects/CircleObject.cpp
 BinaryGFX/Core/Objects/TriangleObject.cpp
 BinaryGFX/Core/Objects/TextObject.cpp
+BinaryGFX/Core/Objects/BinaryObject.cpp
 BinaryGFX/Driver/Ssd1306Driver.cpp
 BinaryGFX/Hal/Stm32I2c.cpp
 BinaryGFX/Hal/Helper/I2cHelper.cpp
@@ -224,6 +228,33 @@ if(text) {
 gfx->update();
 ```
 
+### バイナリ画像の表示
+
+ロゴやアイコンなどの任意のビットマップ画像を表示するには、`BinaryData` 構造体でデータを定義した上で `BinaryObject` を追加します。
+
+```cpp
+// データ形式: 縦ページ形式・LSB が上端・列優先（FontData と同じ形式）
+// データサイズ = width × ceil(height / 8) バイト
+// データ配置: [col0_page0, col0_page1, ..., col1_page0, ...]
+constexpr uint8_t logoData[] = {
+    // 8×8 の枠線サンプル（width=8, height=8 → 8列 × 1ページ = 8バイト）
+    0xFF, 0x81, 0x81, 0x81, 0x81, 0x81, 0x81, 0xFF,
+};
+
+constexpr BinaryGFX::BinaryData logo = {
+    8,        // width  (ピクセル)
+    8,        // height (ピクセル)
+    logoData
+};
+
+// BinaryObject を追加する
+gfx->addObject(std::make_unique<BinaryGFX::BinaryObject>(10, 10, &logo));
+
+gfx->update();
+```
+
+---
+
 ### アニメーション（オブジェクトの更新）
 
 `addObject()` が返す `ObjectId` を使ってオブジェクトを取得し、プロパティを変更してから再描画できます。
@@ -248,6 +279,7 @@ gfx->update(); // 変更を反映して転送
 | `CircleObject` | 円 | `setCenter()`, `setRadius()`, `setPixelState()`, `setFilled()` |
 | `TriangleObject` | 三角形 | `setVertices()`, `setPixelState()`, `setFilled()` |
 | `TextObject` | テキスト | `setPosition()`, `setText()`, `setFont()`, `setPixelState()`, `setCharSpacing()`, `setLineSpacing()`, `setWordWrap()` |
+| `BinaryObject` | バイナリ画像（ロゴ・アイコン等） | `setPosition()`, `setBinaryData()`, `setPixelState()` |
 
 すべてのオブジェクトに共通の `setZ(int16_t z)` で描画順を制御できます。Z 値が小さいオブジェクトほど先に描画されます。
 
