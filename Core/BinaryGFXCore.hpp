@@ -11,9 +11,9 @@
 #include <vector>
 #include <memory>
 #include "FrameBuffer.hpp"
-#include "Objects/IGraphicsObject.hpp"
+#include "IGraphicsObject.hpp"
 #include "../Common/Error.hpp"
-#include "../Driver/IDisplayDriver.hpp"
+#include "IDisplayDriver.hpp"
 
 namespace BinaryGFX {
 
