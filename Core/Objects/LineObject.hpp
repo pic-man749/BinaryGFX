@@ -7,7 +7,7 @@
 #ifndef BINARYGFX_CORE_OBJECTS_LINEOBJECT_HPP_
 #define BINARYGFX_CORE_OBJECTS_LINEOBJECT_HPP_
 
-#include "IGraphicsObject.hpp"
+#include "../IGraphicsObject.hpp"
 #include "../../Common/PixelState.hpp"
 
 namespace BinaryGFX {

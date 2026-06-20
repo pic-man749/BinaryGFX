@@ -21,7 +21,7 @@
 #include "Core/Binary/BinaryData.hpp"
 
 // グラフィックオブジェクト
-#include "Core/Objects/IGraphicsObject.hpp"
+#include "Core/IGraphicsObject.hpp"
 #include "Core/Objects/PointObject.hpp"
 #include "Core/Objects/LineObject.hpp"
 #include "Core/Objects/RectangleObject.hpp"
@@ -38,7 +38,7 @@
 #include "Driver/Ssd1306Driver.hpp"
 
 // HAL（共通インタフェース）
-#include "Hal/ICommInterface.hpp"
+#include "Driver/ICommInterface.hpp"
 
 // STM32 HAL実装（BGFX_USE_STM32 定義時のみ有効）
 #ifdef BGFX_USE_STM32

@@ -9,8 +9,8 @@
 
 #include <cstdint>
 #include <memory>
-#include "IDisplayDriver.hpp"
-#include "../Hal/ICommInterface.hpp"
+#include "../Core/IDisplayDriver.hpp"
+#include "ICommInterface.hpp"
 
 namespace BinaryGFX::Driver {
 

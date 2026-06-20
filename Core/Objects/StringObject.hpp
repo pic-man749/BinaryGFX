@@ -9,7 +9,7 @@
 
 #include <cstdint>
 #include <string>
-#include "IGraphicsObject.hpp"
+#include "../IGraphicsObject.hpp"
 #include "../../Common/PixelState.hpp"
 #include "../Font/FontData.hpp"
 

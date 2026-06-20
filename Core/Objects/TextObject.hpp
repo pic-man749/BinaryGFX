@@ -8,7 +8,7 @@
 #define BINARYGFX_CORE_OBJECTS_TEXTOBJECT_HPP_
 
 #include <cstdint>
-#include "IGraphicsObject.hpp"
+#include "../IGraphicsObject.hpp"
 #include "../../Common/PixelState.hpp"
 #include "../Font/FontData.hpp"
 

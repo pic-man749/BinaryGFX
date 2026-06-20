@@ -7,7 +7,7 @@
 #ifndef BINARYGFX_HAL_STM32I2CDMA_HPP_
 #define BINARYGFX_HAL_STM32I2CDMA_HPP_
 
-#include "ICommInterface.hpp"
+#include "../Driver/ICommInterface.hpp"
 #include "i2c.h"
 #include <vector>
 
