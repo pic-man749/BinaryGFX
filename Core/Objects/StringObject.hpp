@@ -59,6 +59,12 @@ namespace BinaryGFX {
       void setText(const std::string string);
 
       /**
+       * @brief 表示文字列を取得する
+       *
+       */
+      std::string& getText();
+
+      /**
        * @brief 使用フォントを設定する
        *
        * @param font 使用フォント（所有権なし）
