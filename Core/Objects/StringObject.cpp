@@ -74,6 +74,10 @@ namespace BinaryGFX {
     m_string = string;
   }
 
+  std::string& StringObject::getText() {
+    return m_string;
+  }
+
   void StringObject::setFont(const FontData *font) {
     m_font = font;
     updateFontMetrics();
