@@ -24,10 +24,11 @@
 BinaryGFX/
 ├── BinaryGFX.hpp               # アンブレラヘッダ
 ├── Common/
-│   ├── Error.hpp               # 共通型定義（ErrorCode, ObjectId）
+│   ├── Error.hpp               # 共通型定義（ErrorCode）
 │   └── PixelState.hpp          # 共通型定義（PixelState）
 ├── Core/
 │   ├── BinaryGFXCore.hpp / .cpp  # コアクラス
+│   ├── ObjectId.hpp              # オブジェクトID定義（ObjectId, TypedObjectId）
 │   ├── FrameBuffer.hpp / .cpp    # フレームバッファ
 │   ├── Font/
 │   │   ├── FontData.hpp          # フォントデータ構造体
@@ -61,8 +62,9 @@ BinaryGFX/
 ```
 ┌──────────────────────────────────────────────────────┐     ┌───────────────────────────────┐
 │  Core (BinaryGFX::)                                  │     │  Common                       │
-│  BinaryGFX, FrameBuffer, IGraphicsObject, Objects    │ ref │  ErrorCode, ObjectId,         │
-│                         ↓ uses                       │  →  |  InvalidObjectId, PixelState  |
+│  BinaryGFX, ObjectId, TypedObjectId, FrameBuffer,    │ ref │  ErrorCode, PixelState        │
+│  IGraphicsObject, Objects                            │  →  |                               |
+│                         ↓ uses                       │     |                               |
 │              IDisplayDriver (interface)              │     |                               |
 └──────────────────────────────────────────────────────┘     |                               |
                           ↑ implements                       |                               |
@@ -218,7 +220,7 @@ gfx->addObject(std::make_unique<BinaryGFX::TextObject>(0, 0, "Hello!", &myFont))
 
 // 文字間・行間スペースやワードラップはセッターで設定できる
 auto id = gfx->addObject(std::make_unique<BinaryGFX::TextObject>(0, 16, "Line1\nLine2", &myFont));
-auto* text = gfx->getObjectById<BinaryGFX::TextObject>(id);
+auto* text = gfx->getObjectById(id); // idの型からTextObjectが自動的に決まる
 if(text) {
     text->setCharSpacing(2);   // 文字間 2px
     text->setLineSpacing(2);   // 行間 2px
@@ -257,10 +259,10 @@ gfx->update();
 
 ### アニメーション（オブジェクトの更新）
 
-`addObject()` が返す `ObjectId` を使ってオブジェクトを取得し、プロパティを変更してから再描画できます。
+`addObject()` が返す `TypedObjectId<T>` を使ってオブジェクトを取得し、プロパティを変更してから再描画できます。
 
 ```cpp
-auto* circle = gfx->getObjectById<BinaryGFX::CircleObject>(circleId);
+auto* circle = gfx->getObjectById(circleId); // idの型からCircleObjectが自動的に決まる
 if (circle) {
     circle->setCenter(80, 32); // 位置を変更
 }
@@ -298,11 +300,12 @@ explicit BinaryGFX(std::unique_ptr<Driver::IDisplayDriver> driver);
 // ディスプレイを初期化する
 bool init();
 
-// オブジェクトを追加する（所有権を移譲）。戻り値の ObjectId で後から参照できる
-template<typename T> ObjectId addObject(std::unique_ptr<T> obj);
+// オブジェクトを追加する（所有権を移譲）。戻り値の TypedObjectId<T> で後から参照できる
+template<typename T> TypedObjectId<T> addObject(std::unique_ptr<T> obj);
 
-// ObjectId でオブジェクトを取得する（removeObject() 後にポインタは無効になる）
-template<typename T> T* getObjectById(ObjectId id);
+// TypedObjectId<T> でオブジェクトを取得する（removeObject() 後にポインタは無効になる）
+// idの型からTが自動的に決まるため、呼び出し時にテンプレート引数を明示する必要はない
+template<typename T> T* getObjectById(TypedObjectId<T> id);
 
 // 指定 ID のオブジェクトを削除する
 void removeObject(ObjectId id);
@@ -323,6 +326,14 @@ namespace BinaryGFX {
 
 using ObjectId = uint32_t;
 static constexpr ObjectId InvalidObjectId = 0u;
+
+// 型情報を保持するオブジェクトID。addObject()のみが有効な値を発行できる
+template<typename T> class TypedObjectId {
+public:
+    constexpr TypedObjectId(); // 無効なIDとして構築する
+    constexpr bool isValid() const;
+    constexpr operator ObjectId() const; // 型消去（removeObject()等に使用）
+};
 
 enum class PixelState : uint8_t {
     Off = 0,  // 消灯
