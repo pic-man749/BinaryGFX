@@ -17,6 +17,12 @@
 
 namespace BinaryGFX {
 
+  /** オブジェクトを一意に識別するID */
+  using ObjectId = uint32_t;
+
+  /** 無効なオブジェクトIDを表す定数 */
+  static constexpr ObjectId InvalidObjectId = 0u;
+
   /**
    * @brief BinaryGFXコアクラス
    *
