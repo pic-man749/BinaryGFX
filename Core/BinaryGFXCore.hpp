@@ -12,16 +12,11 @@
 #include <memory>
 #include "FrameBuffer.hpp"
 #include "IGraphicsObject.hpp"
+#include "ObjectId.hpp"
 #include "../Common/Error.hpp"
 #include "IDisplayDriver.hpp"
 
 namespace BinaryGFX {
-
-  /** オブジェクトを一意に識別するID */
-  using ObjectId = uint32_t;
-
-  /** 無効なオブジェクトIDを表す定数 */
-  static constexpr ObjectId InvalidObjectId = 0u;
 
   /**
    * @brief BinaryGFXコアクラス
@@ -56,23 +51,24 @@ namespace BinaryGFX {
        *
        * @tparam T  IGraphicsObjectを継承した具体的なオブジェクト型
        * @param obj 追加するオブジェクト
-       * @return ObjectId 採番されたオブジェクトID。nullptrが渡された場合はInvalidObjectId
+       * @return TypedObjectId<T> 採番されたオブジェクトID。nullptrが渡された場合は無効なID
        */
       template<typename T>
-      ObjectId addObject(std::unique_ptr<T> obj);
+      TypedObjectId<T> addObject(std::unique_ptr<T> obj);
 
       /**
-       * @brief ObjectIdでグラフィックオブジェクトを取得する
+       * @brief TypedObjectIdでグラフィックオブジェクトを取得する
        *
        * 返した生ポインタはremoveObject()呼び出し後に無効になる。
        * ポインタは保持せず毎回本メソッドで取得すること。
+       * 取得対象の型はidの型から自動的に決まるため、呼び出し時にテンプレート引数を明示する必要はない。
        *
        * @tparam T IGraphicsObjectを継承した具体的なオブジェクト型
        * @param id 取得するオブジェクトのID
        * @return T* オブジェクトへの生ポインタ。見つからない場合はnullptr
        */
       template<typename T>
-      T* getObjectById(ObjectId id);
+      T* getObjectById(TypedObjectId<T> id);
 
       /**
        * @brief グラフィックオブジェクトを削除する
@@ -125,19 +121,22 @@ namespace BinaryGFX {
   };
 
   template<typename T>
-  ObjectId BinaryGFX::addObject(std::unique_ptr<T> obj) {
+  TypedObjectId<T> BinaryGFX::addObject(std::unique_ptr<T> obj) {
     if(!obj) {
-      return InvalidObjectId;
+      return TypedObjectId<T>();
     }
     const ObjectId id = m_nextId++;
     m_objects.push_back(ObjectEntry { id, std::move(obj) });
-    return id;
+    return TypedObjectId<T>(id);
   }
 
   template<typename T>
-  T* BinaryGFX::getObjectById(ObjectId id) {
+  T* BinaryGFX::getObjectById(TypedObjectId<T> id) {
+    if(!id.isValid()) {
+      return nullptr;
+    }
     for(auto &entry : m_objects) {
-      if(entry.id == id) {
+      if(entry.id == static_cast<ObjectId>(id)) {
         return static_cast<T*>(entry.object.get());
       }
     }

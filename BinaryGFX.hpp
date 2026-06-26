@@ -7,11 +7,12 @@
 #ifndef BINARYGFX_BINARYGFX_HPP_
 #define BINARYGFX_BINARYGFX_HPP_
 
-// 共通型（ErrorCode, ObjectId, PixelState）
+// 共通型（ErrorCode, PixelState）
 #include "Common/Error.hpp"
 #include "Common/PixelState.hpp"
 
-// コア
+// コア（ObjectId, TypedObjectId, BinaryGFX）
+#include "Core/ObjectId.hpp"
 #include "Core/BinaryGFXCore.hpp"
 
 // フォント
