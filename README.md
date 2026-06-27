@@ -29,6 +29,7 @@ BinaryGFX/
 ├── Core/
 │   ├── BinaryGFXCore.hpp / .cpp  # コアクラス
 │   ├── ObjectId.hpp              # オブジェクトID定義（ObjectId, TypedObjectId）
+│   ├── ObjectFactory.hpp         # オブジェクト生成ヘルパー（create*関数）
 │   ├── FrameBuffer.hpp / .cpp    # フレームバッファ
 │   ├── Font/
 │   │   ├── FontData.hpp          # フォントデータ構造体
@@ -43,6 +44,7 @@ BinaryGFX/
 │       ├── CircleObject.hpp / .cpp
 │       ├── TriangleObject.hpp / .cpp
 │       ├── TextObject.hpp / .cpp
+│       ├── StringObject.hpp / .cpp
 │       └── BinaryObject.hpp / .cpp
 ├── Driver/
 │   ├── IDisplayDriver.hpp        # ドライバインタフェース
@@ -151,6 +153,7 @@ BinaryGFX/Core/Objects/RectangleObject.cpp
 BinaryGFX/Core/Objects/CircleObject.cpp
 BinaryGFX/Core/Objects/TriangleObject.cpp
 BinaryGFX/Core/Objects/TextObject.cpp
+BinaryGFX/Core/Objects/StringObject.cpp
 BinaryGFX/Core/Objects/BinaryObject.cpp
 BinaryGFX/Driver/Ssd1306Driver.cpp
 BinaryGFX/Hal/Stm32I2c.cpp
@@ -180,15 +183,16 @@ if (!gfx->init()) {
 }
 
 // オブジェクトを追加する
-gfx->addObject(std::make_unique<BinaryGFX::RectangleObject>(0, 0, 128, 64));
+BinaryGFX::createRectangle(*gfx, 0, 0, 128, 64);
 
 // idを保持しておくことで、追加したオブジェクトをあとから操作できます
-auto circleId = gfx->addObject(
-    std::make_unique<BinaryGFX::CircleObject>(64, 32, 20, BinaryGFX::PixelState::On, true));
+auto circleId = BinaryGFX::createCircle(*gfx, 64, 32, 20, BinaryGFX::PixelState::On, true);
 
 // 描画・転送
 gfx->update();
 ```
+
+> `Core/ObjectFactory.hpp` が提供する `create*` ヘルパー関数を利用することで簡易にオブジェクトを追加できます。 `gfx->addObject(std::make_unique<BinaryGFX::RectangleObject>(...))` のように直接オブジェクトの記述を追加することも可能です。
 
 ### テキストの表示
 
@@ -216,10 +220,10 @@ constexpr BinaryGFX::FontData myFont = {
 };
 
 // TextObject を追加する（ワードラップはデフォルトで有効）
-gfx->addObject(std::make_unique<BinaryGFX::TextObject>(0, 0, "Hello!", &myFont));
+BinaryGFX::createText(*gfx, 0, 0, "Hello!", &myFont);
 
 // 文字間・行間スペースやワードラップはセッターで設定できる
-auto id = gfx->addObject(std::make_unique<BinaryGFX::TextObject>(0, 16, "Line1\nLine2", &myFont));
+auto id = BinaryGFX::createText(*gfx, 0, 16, "Line1\nLine2", &myFont);
 auto* text = gfx->getObjectById(id); // idの型からTextObjectが自動的に決まる
 if(text) {
     text->setCharSpacing(2);   // 文字間 2px
@@ -250,7 +254,7 @@ constexpr BinaryGFX::BinaryData logo = {
 };
 
 // BinaryObject を追加する
-gfx->addObject(std::make_unique<BinaryGFX::BinaryObject>(10, 10, &logo));
+BinaryGFX::createBinary(*gfx, 10, 10, &logo);
 
 gfx->update();
 ```
@@ -273,15 +277,16 @@ gfx->update(); // 変更を反映して転送
 
 ## グラフィックオブジェクト一覧
 
-| クラス | 説明 | 主なセッター |
-|--------|------|-----------|
-| `PointObject` | 点 | `setPosition()`, `setPixelState()` |
-| `LineObject` | 直線 | `setStart()`, `setEnd()`, `setPixelState()` |
-| `RectangleObject` | 矩形 | `setPosition()`, `setSize()`, `setPixelState()`, `setFilled()` |
-| `CircleObject` | 円 | `setCenter()`, `setRadius()`, `setPixelState()`, `setFilled()` |
-| `TriangleObject` | 三角形 | `setVertices()`, `setPixelState()`, `setFilled()` |
-| `TextObject` | テキスト | `setPosition()`, `setText()`, `setFont()`, `setPixelState()`, `setCharSpacing()`, `setLineSpacing()`, `setWordWrap()` |
-| `BinaryObject` | バイナリ画像（ロゴ・アイコン等） | `setPosition()`, `setBinaryData()`, `setPixelState()` |
+| クラス | 説明 | ヘルパー関数 | 主なセッター |
+|--------|------|-----------|-----------|
+| `PointObject` | 点 | `createPoint()` | `setPosition()`, `setPixelState()` |
+| `LineObject` | 直線 | `createLine()` | `setStart()`, `setEnd()`, `setPixelState()` |
+| `RectangleObject` | 矩形 | `createRectangle()` | `setPosition()`, `setSize()`, `setPixelState()`, `setFilled()` |
+| `CircleObject` | 円 | `createCircle()` | `setCenter()`, `setRadius()`, `setPixelState()`, `setFilled()` |
+| `TriangleObject` | 三角形 | `createTriangle()` | `setVertices()`, `setPixelState()`, `setFilled()` |
+| `TextObject` | テキスト（`const char*`、所有権なし） | `createText()` | `setPosition()`, `setText()`, `setFont()`, `setPixelState()`, `setCharSpacing()`, `setLineSpacing()`, `setWordWrap()` |
+| `StringObject` | テキスト（`std::string`として文字列を保持） | `createString()` | `setPosition()`, `setText()`, `getText()`, `setFont()`, `setPixelState()`, `setCharSpacing()`, `setLineSpacing()`, `setWordWrap()` |
+| `BinaryObject` | バイナリ画像（ロゴ・アイコン等） | `createBinary()` | `setPosition()`, `setBinaryData()`, `setPixelState()` |
 
 すべてのオブジェクトに共通の `setZ(int16_t z)` で描画順を制御できます。Z 値が小さいオブジェクトほど先に描画されます。
 
@@ -318,6 +323,27 @@ ErrorCode update();
 
 } // namespace BinaryGFX
 ```
+
+### オブジェクト生成ヘルパー（ObjectFactory）
+
+`Core/ObjectFactory.hpp` は、各グラフィックオブジェクトの `std::make_unique` + `addObject()` 呼び出しを簡略化するヘルパー関数を提供します。
+
+```cpp
+namespace BinaryGFX {
+
+TypedObjectId<PointObject>     createPoint(BinaryGFX &gfx, int16_t x, int16_t y, PixelState pixelState = PixelState::On, int16_t z = 0);
+TypedObjectId<LineObject>      createLine(BinaryGFX &gfx, int16_t x0, int16_t y0, int16_t x1, int16_t y1, PixelState pixelState = PixelState::On, int16_t z = 0);
+TypedObjectId<RectangleObject> createRectangle(BinaryGFX &gfx, int16_t x, int16_t y, int16_t w, int16_t h, PixelState pixelState = PixelState::On, bool filled = false, int16_t z = 0);
+TypedObjectId<CircleObject>    createCircle(BinaryGFX &gfx, int16_t cx, int16_t cy, int16_t r, PixelState pixelState = PixelState::On, bool filled = false, int16_t z = 0);
+TypedObjectId<TriangleObject>  createTriangle(BinaryGFX &gfx, int16_t x0, int16_t y0, int16_t x1, int16_t y1, int16_t x2, int16_t y2, PixelState pixelState = PixelState::On, bool filled = false, int16_t z = 0);
+TypedObjectId<TextObject>      createText(BinaryGFX &gfx, int16_t x, int16_t y, const char *text, const FontData *font, PixelState pixelState = PixelState::On, int16_t z = 0);
+TypedObjectId<StringObject>    createString(BinaryGFX &gfx, int16_t x, int16_t y, std::string string, const FontData *font, PixelState pixelState = PixelState::On, int16_t z = 0);
+TypedObjectId<BinaryObject>    createBinary(BinaryGFX &gfx, int16_t x, int16_t y, const BinaryData *data, PixelState pixelState = PixelState::On, int16_t z = 0);
+
+} // namespace BinaryGFX
+```
+
+各関数は対応する `XxxObject` のコンストラクタへ引数をそのまま転送し、`gfx.addObject(std::make_unique<XxxObject>(...))` を実行した結果を返す薄いラッパーです。戻り値は `addObject()` と同じ `TypedObjectId<T>` です。
 
 ### 共通型
 

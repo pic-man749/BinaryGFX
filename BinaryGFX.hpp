@@ -32,6 +32,9 @@
 #include "Core/Objects/StringObject.hpp"
 #include "Core/Objects/BinaryObject.hpp"
 
+// オブジェクト生成ヘルパー
+#include "Core/ObjectFactory.hpp"
+
 // フォント
 #include "Core/Font/BgfxFont_Ascii.hpp"
 
