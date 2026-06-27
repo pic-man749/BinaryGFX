@@ -12,7 +12,7 @@
 #include "BinaryGFXCore.hpp"
 #include "ObjectId.hpp"
 #include "../Common/PixelState.hpp"
-#include "Font/FontData.hpp"
+#include "Font/BgfxFont_Ascii.hpp"
 #include "Binary/BinaryData.hpp"
 #include "Objects/PointObject.hpp"
 #include "Objects/LineObject.hpp"
@@ -132,7 +132,7 @@ namespace BinaryGFX {
    * @return TypedObjectId<TextObject> 採番されたオブジェクトID
    */
   inline TypedObjectId<TextObject> createText(BinaryGFX &gfx, int16_t x, int16_t y, const char *text,
-                                              const FontData *font,
+                                              const FontData *font = &BgfxFont_Ascii,
                                               PixelState pixelState = PixelState::On,
                                               int16_t z = 0) {
     return gfx.addObject(std::make_unique<TextObject>(x, y, text, font, pixelState, z));
@@ -151,7 +151,7 @@ namespace BinaryGFX {
    * @return TypedObjectId<StringObject> 採番されたオブジェクトID
    */
   inline TypedObjectId<StringObject> createString(BinaryGFX &gfx, int16_t x, int16_t y, std::string string,
-                                                  const FontData *font,
+                                                  const FontData *font = &BgfxFont_Ascii,
                                                   PixelState pixelState = PixelState::On, int16_t z = 0) {
     return gfx.addObject(std::make_unique<StringObject>(x, y, std::move(string), font, pixelState, z));
   }

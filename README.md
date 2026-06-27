@@ -220,10 +220,10 @@ constexpr BinaryGFX::FontData myFont = {
 };
 
 // TextObject を追加する（ワードラップはデフォルトで有効）
-BinaryGFX::createText(*gfx, 0, 0, "Hello!", &myFont);
+BinaryGFX::createText(*gfx, 0, 0, "Hello!");
 
 // 文字間・行間スペースやワードラップはセッターで設定できる
-auto id = BinaryGFX::createText(*gfx, 0, 16, "Line1\nLine2", &myFont);
+auto id = BinaryGFX::createText(*gfx, 0, 16, "Line1\nLine2");
 auto* text = gfx->getObjectById(id); // idの型からTextObjectが自動的に決まる
 if(text) {
     text->setCharSpacing(2);   // 文字間 2px
@@ -336,8 +336,8 @@ TypedObjectId<LineObject>      createLine(BinaryGFX &gfx, int16_t x0, int16_t y0
 TypedObjectId<RectangleObject> createRectangle(BinaryGFX &gfx, int16_t x, int16_t y, int16_t w, int16_t h, PixelState pixelState = PixelState::On, bool filled = false, int16_t z = 0);
 TypedObjectId<CircleObject>    createCircle(BinaryGFX &gfx, int16_t cx, int16_t cy, int16_t r, PixelState pixelState = PixelState::On, bool filled = false, int16_t z = 0);
 TypedObjectId<TriangleObject>  createTriangle(BinaryGFX &gfx, int16_t x0, int16_t y0, int16_t x1, int16_t y1, int16_t x2, int16_t y2, PixelState pixelState = PixelState::On, bool filled = false, int16_t z = 0);
-TypedObjectId<TextObject>      createText(BinaryGFX &gfx, int16_t x, int16_t y, const char *text, const FontData *font, PixelState pixelState = PixelState::On, int16_t z = 0);
-TypedObjectId<StringObject>    createString(BinaryGFX &gfx, int16_t x, int16_t y, std::string string, const FontData *font, PixelState pixelState = PixelState::On, int16_t z = 0);
+TypedObjectId<TextObject>      createText(BinaryGFX &gfx, int16_t x, int16_t y, const char *text, const FontData *font = &BgfxFont_Ascii, PixelState pixelState = PixelState::On, int16_t z = 0);
+TypedObjectId<StringObject>    createString(BinaryGFX &gfx, int16_t x, int16_t y, std::string string, const FontData *font = &BgfxFont_Ascii, PixelState pixelState = PixelState::On, int16_t z = 0);
 TypedObjectId<BinaryObject>    createBinary(BinaryGFX &gfx, int16_t x, int16_t y, const BinaryData *data, PixelState pixelState = PixelState::On, int16_t z = 0);
 
 } // namespace BinaryGFX
