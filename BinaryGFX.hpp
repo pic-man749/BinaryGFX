@@ -52,6 +52,10 @@
 #include "Hal/Stm32I2c.hpp"
 #include "Hal/Stm32I2cDma.hpp"
 #include "Hal/Stm32TickProvider.hpp"
+
+// BinaryGFX生成ヘルパー（STM32向け構成）
+#include "Core/GFXFactory/FactoryStm32I2c.hpp"
+#include "Core/GFXFactory/FactoryStm32I2cDma.hpp"
 #endif
 
 #endif /* BINARYGFX_BINARYGFX_HPP_ */

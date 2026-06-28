@@ -1,0 +1,42 @@
+/*
+ * FactoryStm32I2cDma.hpp
+ *
+ *      Author: picman
+ */
+
+#ifndef BINARYGFX_CORE_GFXFACTORY_FACTORYSTM32I2CDMA_HPP_
+#define BINARYGFX_CORE_GFXFACTORY_FACTORYSTM32I2CDMA_HPP_
+
+#include <memory>
+#include "../BinaryGFXCore.hpp"
+#include "../../Driver/Ssd1306Driver.hpp"
+#include "../../Hal/Stm32I2cDma.hpp"
+#include "../../Hal/Stm32TickProvider.hpp"
+
+namespace BinaryGFX {
+
+  /**
+   * @brief STM32 I2C（DMA）接続のSSD1306構成でBinaryGFXを生成する
+   *
+   * Stm32I2cDma・Ssd1306Driver・Stm32TickProviderの生成と依存注入を一括して行う。
+   * 生成されたインスタンスのinit()呼び出しは呼び出し側の責務とする。
+   *
+   * @param hi2c       使用するI2Cハンドル
+   * @param timeout    I2C通信タイムアウト値（ミリ秒）
+   * @param deviceAddr SSD1306デバイスアドレス（7ビット値）
+   * @param width      ディスプレイ幅（ピクセル）
+   * @param height     ディスプレイ高さ（ピクセル）
+   * @return std::unique_ptr<BinaryGFX> 生成されたBinaryGFXインスタンス
+   */
+  inline std::unique_ptr<BinaryGFX> createGfxStm32I2cDma(I2C_HandleTypeDef *hi2c, uint32_t timeout,
+                                                         uint8_t deviceAddr,
+                                                         uint16_t width, uint16_t height) {
+    auto comm = std::make_unique<Hal::Stm32I2cDma>(hi2c, timeout);
+    auto driver = std::make_unique<Driver::Ssd1306Driver>(std::move(comm), deviceAddr, width, height);
+    auto tickProvider = std::make_unique<Hal::Stm32TickProvider>();
+    return std::make_unique<BinaryGFX>(std::move(driver), std::move(tickProvider));
+  }
+
+} // namespace BinaryGFX
+
+#endif /* BINARYGFX_CORE_GFXFACTORY_FACTORYSTM32I2CDMA_HPP_ */

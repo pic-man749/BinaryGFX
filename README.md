@@ -32,6 +32,9 @@ BinaryGFX/
 │   ├── ObjectFactory.hpp         # オブジェクト生成ヘルパー（create*関数）
 │   ├── FrameBuffer.hpp / .cpp    # フレームバッファ
 │   ├── ITickProvider.hpp         # Tick取得インタフェース
+│   ├── GFXFactory/               # BinaryGFX生成ヘルパー
+│   │   ├── FactoryStm32I2c.hpp     # STM32 I2Cポーリング構成）
+│   │   └── FactoryStm32I2cDma.hpp  # BinaryGFX生成ヘルパー（STM32 I2C DMA構成）
 │   ├── Font/
 │   │   ├── FontData.hpp          # フォントデータ構造体
 │   │   └── BgfxFont_Ascii.hpp    # デフォルトのフォント
@@ -200,6 +203,20 @@ gfx->update();
 ```
 
 > `Core/ObjectFactory.hpp` が提供する `create*` ヘルパー関数を利用することで簡易にオブジェクトを追加できます。 `gfx->addObject(std::make_unique<BinaryGFX::RectangleObject>(...))` のように直接オブジェクトの記述を追加することも可能です。
+
+STM32 I2C接続のSSD1306構成であれば、`Core/GFXFactory/` が提供する `createGfxStm32I2c()` / `createGfxStm32I2cDma()` を使うことで、HAL・ドライバ・TickProviderの生成と依存注入を1呼び出しに省略できます。
+
+```cpp
+// ポーリング方式（Stm32I2c）
+auto gfx = BinaryGFX::createGfxStm32I2c(&hi2c1, 100 /*ms*/, 0x3C /*7bit addr*/, 128, 64);
+
+// DMA方式（Stm32I2cDma）
+auto gfxDma = BinaryGFX::createGfxStm32I2cDma(&hi2c1, 100 /*ms*/, 0x3C /*7bit addr*/, 128, 64);
+
+if (!gfx->init()) {
+    // 初期化失敗の処理
+}
+```
 
 ### テキストの表示
 
@@ -397,6 +414,22 @@ TypedObjectId<AnimationObject> createAnimation(BinaryGFX &gfx, int16_t x, int16_
 ```
 
 各関数は対応する `XxxObject` のコンストラクタへ引数をそのまま転送し、`gfx.addObject(std::make_unique<XxxObject>(...))` を実行した結果を返す薄いラッパーです。戻り値は `addObject()` と同じ `TypedObjectId<T>` です。
+
+### BinaryGFX生成ヘルパー（GFXFactory）
+
+`Core/GFXFactory/` は、HAL・ドライバ・TickProviderの生成と依存注入をまとめて行い `BinaryGFX` インスタンスを返すヘルパー関数を提供します（`BGFX_USE_STM32` 定義時のみ有効）。
+
+```cpp
+namespace BinaryGFX {
+
+// STM32 I2C（ポーリング）接続のSSD1306構成でBinaryGFXを生成する。init()は呼び出し側で行う
+std::unique_ptr<BinaryGFX> createGfxStm32I2c(I2C_HandleTypeDef *hi2c, uint32_t timeout, uint8_t deviceAddr, uint16_t width, uint16_t height);
+
+// STM32 I2C（DMA）接続のSSD1306構成でBinaryGFXを生成する。init()は呼び出し側で行う
+std::unique_ptr<BinaryGFX> createGfxStm32I2cDma(I2C_HandleTypeDef *hi2c, uint32_t timeout, uint8_t deviceAddr, uint16_t width, uint16_t height);
+
+} // namespace BinaryGFX
+```
 
 ### 共通型
 
