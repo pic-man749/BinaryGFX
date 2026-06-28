@@ -14,12 +14,14 @@
 // コア（ObjectId, TypedObjectId, BinaryGFX）
 #include "Core/ObjectId.hpp"
 #include "Core/BinaryGFXCore.hpp"
+#include "Core/ITickProvider.hpp"
 
 // フォント
 #include "Core/Font/FontData.hpp"
 
 // バイナリ画像
 #include "Core/Binary/BinaryData.hpp"
+#include "Core/Binary/AnimationFrames.hpp"
 
 // グラフィックオブジェクト
 #include "Core/IGraphicsObject.hpp"
@@ -31,6 +33,7 @@
 #include "Core/Objects/TextObject.hpp"
 #include "Core/Objects/StringObject.hpp"
 #include "Core/Objects/BinaryObject.hpp"
+#include "Core/Objects/AnimationObject.hpp"
 
 // オブジェクト生成ヘルパー
 #include "Core/ObjectFactory.hpp"
@@ -48,6 +51,7 @@
 #ifdef BGFX_USE_STM32
 #include "Hal/Stm32I2c.hpp"
 #include "Hal/Stm32I2cDma.hpp"
+#include "Hal/Stm32TickProvider.hpp"
 #endif
 
 #endif /* BINARYGFX_BINARYGFX_HPP_ */

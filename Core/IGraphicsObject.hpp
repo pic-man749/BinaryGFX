@@ -34,6 +34,18 @@ namespace BinaryGFX {
       virtual void render(FrameBuffer &fb) const = 0;
 
       /**
+       * @brief 時間経過に応じた内部状態を更新する
+       *
+       * アニメーション等、時間経過に応じて内部状態を変化させるオブジェクトのみが
+       * オーバーライドする。デフォルトでは何も行わない。
+       *
+       * @param tickMs 現在のTick値（ミリ秒）
+       */
+      virtual void update(uint32_t tickMs) {
+        static_cast<void>(tickMs);
+      }
+
+      /**
        * @brief Z値を取得する
        *
        * @return Z値

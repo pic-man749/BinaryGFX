@@ -14,6 +14,7 @@
 #include "../Common/PixelState.hpp"
 #include "Font/BgfxFont_Ascii.hpp"
 #include "Binary/BinaryData.hpp"
+#include "Binary/AnimationFrames.hpp"
 #include "Objects/PointObject.hpp"
 #include "Objects/LineObject.hpp"
 #include "Objects/RectangleObject.hpp"
@@ -22,6 +23,7 @@
 #include "Objects/TextObject.hpp"
 #include "Objects/StringObject.hpp"
 #include "Objects/BinaryObject.hpp"
+#include "Objects/AnimationObject.hpp"
 
 namespace BinaryGFX {
 
@@ -170,6 +172,26 @@ namespace BinaryGFX {
   inline TypedObjectId<BinaryObject> createBinary(BinaryGFX &gfx, int16_t x, int16_t y, const BinaryData *data,
                                                   PixelState pixelState = PixelState::On, int16_t z = 0) {
     return gfx.addObject(std::make_unique<BinaryObject>(x, y, data, pixelState, z));
+  }
+
+  /**
+   * @brief アニメーションオブジェクトを生成し追加する
+   *
+   * @param gfx        追加先のBinaryGFXインスタンス
+   * @param x          描画開始X座標（左上基準）
+   * @param y          描画開始Y座標（左上基準）
+   * @param af         AnimationFramesへのポインタ（所有権なし）
+   * @param loop       true:ループ再生、false:1回再生（デフォルト: true）
+   * @param state      初期再生状態（デフォルト: Playing）
+   * @param pixelState 描画色（デフォルト: 点灯）
+   * @param z          Z値（デフォルト: 0）
+   * @return TypedObjectId<AnimationObject> 採番されたオブジェクトID
+   */
+  inline TypedObjectId<AnimationObject> createAnimation(BinaryGFX &gfx, int16_t x, int16_t y, const AnimationFrames *af,
+                                                        bool loop = true,
+                                                        AnimationObject::PlaybackState state = AnimationObject::PlaybackState::Playing,
+                                                        PixelState pixelState = PixelState::On, int16_t z = 0) {
+    return gfx.addObject(std::make_unique<AnimationObject>(x, y, af, loop, state, pixelState, z));
   }
 
 } // namespace BinaryGFX

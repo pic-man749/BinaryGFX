@@ -31,11 +31,13 @@ BinaryGFX/
 │   ├── ObjectId.hpp              # オブジェクトID定義（ObjectId, TypedObjectId）
 │   ├── ObjectFactory.hpp         # オブジェクト生成ヘルパー（create*関数）
 │   ├── FrameBuffer.hpp / .cpp    # フレームバッファ
+│   ├── ITickProvider.hpp         # Tick取得インタフェース
 │   ├── Font/
 │   │   ├── FontData.hpp          # フォントデータ構造体
 │   │   └── BgfxFont_Ascii.hpp    # デフォルトのフォント
 │   ├── Binary/
-│   │   └── BinaryData.hpp        # バイナリ画像データ構造体
+│   │   ├── BinaryData.hpp        # バイナリ画像データ構造体
+│   │   └── AnimationFrames.hpp   # アニメーションフレーム構造体
 │   └── Objects/                  # グラフィックオブジェクト
 │       ├── IGraphicsObject.hpp
 │       ├── PointObject.hpp / .cpp
@@ -45,7 +47,8 @@ BinaryGFX/
 │       ├── TriangleObject.hpp / .cpp
 │       ├── TextObject.hpp / .cpp
 │       ├── StringObject.hpp / .cpp
-│       └── BinaryObject.hpp / .cpp
+│       ├── BinaryObject.hpp / .cpp
+│       └── AnimationObject.hpp / .cpp
 ├── Driver/
 │   ├── IDisplayDriver.hpp        # ドライバインタフェース
 │   └── Ssd1306Driver.hpp / .cpp  # SSD1306 ドライバ実装
@@ -53,6 +56,7 @@ BinaryGFX/
     ├── ICommInterface.hpp        # 通信インタフェース
     ├── Stm32I2c.hpp / .cpp       # STM32 I2C ラッパー実装
     ├── Stm32I2cDma.hpp / .cpp    # STM32 I2C (DMA) ラッパー実装
+    ├── Stm32TickProvider.hpp / .cpp  # STM32 Tick取得実装（HAL_GetTick）
     └── Helper/
         └── I2cHelper.hpp / .cpp  # I2C ステータス変換ヘルパー
 ```
@@ -155,8 +159,10 @@ BinaryGFX/Core/Objects/TriangleObject.cpp
 BinaryGFX/Core/Objects/TextObject.cpp
 BinaryGFX/Core/Objects/StringObject.cpp
 BinaryGFX/Core/Objects/BinaryObject.cpp
+BinaryGFX/Core/Objects/AnimationObject.cpp
 BinaryGFX/Driver/Ssd1306Driver.cpp
 BinaryGFX/Hal/Stm32I2c.cpp
+BinaryGFX/Hal/Stm32TickProvider.cpp
 BinaryGFX/Hal/Helper/I2cHelper.cpp
 ```
 
@@ -172,10 +178,11 @@ BinaryGFX/Hal/Helper/I2cHelper.cpp
 #include "BinaryGFX.hpp"
 
 // 各層を生成して BinaryGFX へ依存注入する
-auto comm   = std::make_unique<BinaryGFX::Hal::Stm32I2c>(&hi2c1, 100 /*ms*/);
-auto driver = std::make_unique<BinaryGFX::Driver::Ssd1306Driver>(
-                  std::move(comm), 0x3C /*7bit addr*/, 128, 64);
-auto gfx = std::make_unique<BinaryGFX::BinaryGFX>(std::move(driver));
+auto comm         = std::make_unique<BinaryGFX::Hal::Stm32I2c>(&hi2c1, 100 /*ms*/);
+auto driver       = std::make_unique<BinaryGFX::Driver::Ssd1306Driver>(
+                        std::move(comm), 0x3C /*7bit addr*/, 128, 64);
+auto tickProvider = std::make_unique<BinaryGFX::Hal::Stm32TickProvider>();
+auto gfx = std::make_unique<BinaryGFX::BinaryGFX>(std::move(driver), std::move(tickProvider));
 
 // 初期化
 if (!gfx->init()) {
@@ -261,7 +268,51 @@ gfx->update();
 
 ---
 
-### アニメーション（オブジェクトの更新）
+### フレームアニメーションの表示
+
+複数の `BinaryData` フレームを一定間隔で切り替えるアニメーションを表示するには、`AnimationFrames` 構造体でフレーム列を定義した上で `AnimationObject` を追加します。
+
+```cpp
+// 各フレームは BinaryData として定義する（データ形式は前述のバイナリ画像と同じ）
+constexpr uint8_t frame0Data[] = { 0xFF, 0x81, 0x81, 0x81, 0x81, 0x81, 0x81, 0xFF };
+constexpr uint8_t frame1Data[] = { 0x00, 0x00, 0x00, 0xFF, 0xFF, 0x00, 0x00, 0x00 };
+
+constexpr BinaryGFX::BinaryData frame0 = { 8, 8, frame0Data };
+constexpr BinaryGFX::BinaryData frame1 = { 8, 8, frame1Data };
+
+// フレーム配列へのポインタ配列を用意する
+constexpr const BinaryGFX::BinaryData *animFrames[] = { &frame0, &frame1 };
+
+constexpr BinaryGFX::AnimationFrames blinkAnim = {
+    animFrames,  // フレーム配列の先頭ポインタ
+    2,           // frameCount（2以上であること）
+    200          // intervalMs（フレーム切替間隔、ミリ秒）
+};
+
+// AnimationObject を追加する（デフォルト: ループ再生・再生中の状態で生成される）
+auto animId = BinaryGFX::createAnimation(*gfx, 10, 10, &blinkAnim);
+
+gfx->update(); // 呼び出しごとに内部で経過時間を判定し、必要に応じてフレームを切り替える
+```
+
+1回限りの再生にしたい場合や、生成直後は停止させておきたい場合はコンストラクタ（および `createAnimation()`）の `loop` / `state` 引数で指定します。
+
+```cpp
+// 1回再生・生成直後は停止状態で生成する（再開時は resume() を呼ぶ）
+auto onceId = BinaryGFX::createAnimation(*gfx, 10, 10, &blinkAnim,
+                                         false, BinaryGFX::AnimationObject::PlaybackState::Stopped);
+
+auto* once = gfx->getObjectById(onceId);
+if (once) {
+    once->resume(); // 停止位置（先頭フレーム）から再生を開始する
+}
+```
+
+再生状態は `stop()` / `resume()` で一時停止・再開でき、`getPlaybackState()` で現在の状態（`Stopped` / `Playing`）を取得できます。
+
+---
+
+### オブジェクトのプロパティ更新
 
 `addObject()` が返す `TypedObjectId<T>` を使ってオブジェクトを取得し、プロパティを変更してから再描画できます。
 
@@ -287,6 +338,7 @@ gfx->update(); // 変更を反映して転送
 | `TextObject` | テキスト（`const char*`、所有権なし） | `createText()` | `setPosition()`, `setText()`, `setFont()`, `setPixelState()`, `setCharSpacing()`, `setLineSpacing()`, `setWordWrap()` |
 | `StringObject` | テキスト（`std::string`として文字列を保持） | `createString()` | `setPosition()`, `setText()`, `getText()`, `setFont()`, `setPixelState()`, `setCharSpacing()`, `setLineSpacing()`, `setWordWrap()` |
 | `BinaryObject` | バイナリ画像（ロゴ・アイコン等） | `createBinary()` | `setPosition()`, `setBinaryData()`, `setPixelState()` |
+| `AnimationObject` | 複数の `BinaryData` フレームを切り替えるアニメーション（`BinaryObject` 派生） | `createAnimation()` | `playLoop()`, `playOnce()`, `stop()`, `resume()`, `getPlaybackState()` |
 
 すべてのオブジェクトに共通の `setZ(int16_t z)` で描画順を制御できます。Z 値が小さいオブジェクトほど先に描画されます。
 
@@ -299,8 +351,8 @@ gfx->update(); // 変更を反映して転送
 ```cpp
 namespace BinaryGFX {
 
-// コンストラクタ: ドライバの所有権を受け取りフレームバッファを初期化する
-explicit BinaryGFX(std::unique_ptr<Driver::IDisplayDriver> driver);
+// コンストラクタ: ドライバ・Tick取得インタフェースの所有権を受け取りフレームバッファを初期化する
+BinaryGFX(std::unique_ptr<Driver::IDisplayDriver> driver, std::unique_ptr<ITickProvider> tickProvider);
 
 // ディスプレイを初期化する
 bool init();
@@ -318,7 +370,7 @@ void removeObject(ObjectId id);
 // 全オブジェクトを削除する
 void removeAll();
 
-// フレームバッファをクリアして全オブジェクトを再描画し、ディスプレイへ転送する
+// 全オブジェクトの内部状態（アニメーション等）を更新したうえでフレームバッファへ再描画し、ディスプレイへ転送する
 ErrorCode update();
 
 } // namespace BinaryGFX
@@ -339,6 +391,7 @@ TypedObjectId<TriangleObject>  createTriangle(BinaryGFX &gfx, int16_t x0, int16_
 TypedObjectId<TextObject>      createText(BinaryGFX &gfx, int16_t x, int16_t y, const char *text, const FontData *font = &BgfxFont_Ascii, PixelState pixelState = PixelState::On, int16_t z = 0);
 TypedObjectId<StringObject>    createString(BinaryGFX &gfx, int16_t x, int16_t y, std::string string, const FontData *font = &BgfxFont_Ascii, PixelState pixelState = PixelState::On, int16_t z = 0);
 TypedObjectId<BinaryObject>    createBinary(BinaryGFX &gfx, int16_t x, int16_t y, const BinaryData *data, PixelState pixelState = PixelState::On, int16_t z = 0);
+TypedObjectId<AnimationObject> createAnimation(BinaryGFX &gfx, int16_t x, int16_t y, const AnimationFrames *af, bool loop = true, AnimationObject::PlaybackState state = AnimationObject::PlaybackState::Playing, PixelState pixelState = PixelState::On, int16_t z = 0);
 
 } // namespace BinaryGFX
 ```
