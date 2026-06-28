@@ -15,6 +15,7 @@
 #include "ObjectId.hpp"
 #include "../Common/Error.hpp"
 #include "IDisplayDriver.hpp"
+#include "ITickProvider.hpp"
 
 namespace BinaryGFX {
 
@@ -33,9 +34,10 @@ namespace BinaryGFX {
        * フレームバッファはdriverから取得した幅・高さで初期化される。
        * driverのgetWidth()/getHeight()はinit()前から有効である必要がある。
        *
-       * @param driver ディスプレイドライバ（所有権を移譲）
+       * @param driver       ディスプレイドライバ（所有権を移譲）
+       * @param tickProvider Tick取得インタフェース（所有権なし。呼び出し側がライフタイムを管理する）
        */
-      explicit BinaryGFX(std::unique_ptr<Driver::IDisplayDriver> driver);
+      BinaryGFX(std::unique_ptr<Driver::IDisplayDriver> driver, std::unique_ptr<ITickProvider> tickProvider);
 
       /**
        * @brief ディスプレイを初期化する
@@ -85,7 +87,8 @@ namespace BinaryGFX {
       /**
        * @brief フレームバッファを更新してディスプレイへ転送する
        *
-       * デュアルバッファ方式で動作する。
+       * 全オブジェクトのupdate()呼び出し（アニメーション等の内部状態更新）を行ったうえで
+       * レンダリングする。デュアルバッファ方式で動作する。
        * DMA非使用時: レンダリング → 転送 → 返却（ブロッキング）
        * DMA使用時  : 前フレームDMA完了待ち → レンダリング → 転送開始 → 即返却
        * (前フレームのDMA転送中にレンダリングが並行実行される)
@@ -114,6 +117,7 @@ namespace BinaryGFX {
       void renderAll(FrameBuffer &fb);
 
       std::unique_ptr<Driver::IDisplayDriver> m_driver;  /**< ディスプレイドライバ */
+      std::unique_ptr<ITickProvider> m_tickProvider;/**< Tick取得インタフェース（非所有） */
       FrameBuffer m_frameBuffers[2];                     /**< デュアルフレームバッファ */
       uint8_t m_activeBuffer;                            /**< 直前のsendBuffer()で使用したバッファインデックス（0 or 1） */
       std::vector<ObjectEntry> m_objects;                /**< オブジェクト管理リスト */

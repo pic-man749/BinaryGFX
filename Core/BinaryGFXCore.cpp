@@ -9,8 +9,9 @@
 
 namespace BinaryGFX {
 
-  BinaryGFX::BinaryGFX(std::unique_ptr<Driver::IDisplayDriver> driver) :
+  BinaryGFX::BinaryGFX(std::unique_ptr<Driver::IDisplayDriver> driver, std::unique_ptr<ITickProvider> tickProvider) :
       m_driver(std::move(driver)),
+      m_tickProvider(std::move(tickProvider)),
       m_frameBuffers{
           FrameBuffer(m_driver->getWidth(), m_driver->getHeight()),
           FrameBuffer(m_driver->getWidth(), m_driver->getHeight())
@@ -37,6 +38,12 @@ namespace BinaryGFX {
   }
 
   ErrorCode BinaryGFX::update() {
+    // 各オブジェクトの内部状態（アニメーション等）を更新する
+    const uint32_t tickMs = m_tickProvider->getTickMs();
+    for(auto &entry : m_objects) {
+      entry.object->update(tickMs);
+    }
+
     // 前回と別のバッファへレンダリングする
     const uint8_t renderIdx = m_activeBuffer ^ 1u;
     m_frameBuffers[renderIdx].clear();

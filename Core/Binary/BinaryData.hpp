@@ -26,11 +26,11 @@ namespace BinaryGFX {
    *   byte = data[col * pagesPerCol + page]
    *   pixel(col, row): (byte >> (row % 8)) & 0x01、bit0 が上端
    */
-  typedef struct {
+  struct BinaryData {
       uint16_t       width;  /**< 画像幅（ピクセル） */
       uint16_t       height; /**< 画像高さ（ピクセル） */
       const uint8_t* data;   /**< ビットマップデータ（ROM 配置可）*/
-  } BinaryData;
+  };
 
 } // namespace BinaryGFX
 
