@@ -258,6 +258,27 @@ if(text) {
 gfx->update();
 ```
 
+水平方向の揃えは `setAlign()` で設定できる（`TextAlign::Left` / `Center` / `Right`、デフォルトは `Left`）。揃えの基準となる幅は `setWidth()` で指定でき、`0`（デフォルト）を指定するとx座標からフレームバッファ右端までが自動的に基準幅として使われる。揃えは行単位で計算されるため、複数行のテキストでも行ごとに中央・右揃えされる。
+
+```cpp
+// 画面幅を基準に中央揃え（setWidth()を省略するとx座標〜画面右端が基準幅になる）
+auto centerId = BinaryGFX::createString(*gfx, 0, 0, "Centered", &myFont);
+auto* centerText = gfx->getObjectById(centerId);
+if(centerText) {
+    centerText->setAlign(BinaryGFX::TextAlign::Center);
+}
+
+// 幅を明示的に指定し、その範囲内で右揃え
+auto rightId = BinaryGFX::createText(*gfx, 0, 20, "Right", &myFont);
+auto* rightText = gfx->getObjectById(rightId);
+if(rightText) {
+    rightText->setWidth(64);                          // 0〜64pxの範囲を基準幅にする
+    rightText->setAlign(BinaryGFX::TextAlign::Right);  // その範囲内で右揃え
+}
+
+gfx->update();
+```
+
 ### バイナリ画像の表示
 
 ロゴやアイコンなどの任意のビットマップ画像を表示するには、`BinaryData` 構造体でデータを定義した上で `BinaryObject` を追加します。
@@ -352,8 +373,8 @@ gfx->update(); // 変更を反映して転送
 | `RectangleObject` | 矩形 | `createRectangle()` | `setPosition()`, `setSize()`, `setPixelState()`, `setFilled()` |
 | `CircleObject` | 円 | `createCircle()` | `setCenter()`, `setRadius()`, `setPixelState()`, `setFilled()` |
 | `TriangleObject` | 三角形 | `createTriangle()` | `setVertices()`, `setPixelState()`, `setFilled()` |
-| `TextObject` | テキスト（`const char*`、所有権なし） | `createText()` | `setPosition()`, `setText()`, `setFont()`, `setPixelState()`, `setCharSpacing()`, `setLineSpacing()`, `setWordWrap()` |
-| `StringObject` | テキスト（`std::string`として文字列を保持） | `createString()` | `setPosition()`, `setText()`, `getText()`, `setFont()`, `setPixelState()`, `setCharSpacing()`, `setLineSpacing()`, `setWordWrap()` |
+| `TextObject` | テキスト（`const char*`、所有権なし） | `createText()` | `setPosition()`, `setText()`, `setFont()`, `setPixelState()`, `setCharSpacing()`, `setLineSpacing()`, `setWordWrap()`, `setWidth()`, `setAlign()` |
+| `StringObject` | テキスト（`std::string`として文字列を保持） | `createString()` | `setPosition()`, `setText()`, `getText()`, `setFont()`, `setPixelState()`, `setCharSpacing()`, `setLineSpacing()`, `setWordWrap()`, `setWidth()`, `setAlign()` |
 | `BinaryObject` | バイナリ画像（ロゴ・アイコン等） | `createBinary()` | `setPosition()`, `setBinaryData()`, `setPixelState()` |
 | `AnimationObject` | 複数の `BinaryData` フレームを切り替えるアニメーション（`BinaryObject` 派生） | `createAnimation()` | `playLoop()`, `playOnce()`, `stop()`, `resume()`, `getPlaybackState()` |
 
