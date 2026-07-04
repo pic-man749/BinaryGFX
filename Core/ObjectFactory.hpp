@@ -159,6 +159,98 @@ namespace BinaryGFX {
   }
 
   /**
+   * @brief 中央揃えのテキストオブジェクトを生成し追加する
+   *
+   * @param gfx        追加先のBinaryGFXインスタンス
+   * @param x          描画開始X座標（左上基準）
+   * @param y          描画開始Y座標（左上基準）
+   * @param text       表示文字列（所有権なし）
+   * @param width      揃えの基準幅（デフォルト: 0＝x座標〜フレームバッファ右端まで自動）
+   * @param font       使用フォント（所有権なし）
+   * @param pixelState 描画色（デフォルト: 点灯）
+   * @param z          Z値（デフォルト: 0）
+   * @return TypedObjectId<TextObject> 採番されたオブジェクトID
+   */
+  inline TypedObjectId<TextObject> createCenteredText(BinaryGFX &gfx, int16_t x, int16_t y, const char *text,
+                                                      uint16_t width = 0,
+                                                      const FontData *font = &BgfxFont_Ascii,
+                                                      PixelState pixelState = PixelState::On, int16_t z = 0) {
+    auto obj = std::make_unique<TextObject>(x, y, text, font, pixelState, z);
+    obj->setWidth(width);
+    obj->setAlign(TextAlign::Center);
+    return gfx.addObject(std::move(obj));
+  }
+
+  /**
+   * @brief 右揃えのテキストオブジェクトを生成し追加する
+   *
+   * @param gfx        追加先のBinaryGFXインスタンス
+   * @param x          描画開始X座標（左上基準）
+   * @param y          描画開始Y座標（左上基準）
+   * @param text       表示文字列（所有権なし）
+   * @param width      揃えの基準幅（デフォルト: 0＝x座標〜フレームバッファ右端まで自動）
+   * @param font       使用フォント（所有権なし）
+   * @param pixelState 描画色（デフォルト: 点灯）
+   * @param z          Z値（デフォルト: 0）
+   * @return TypedObjectId<TextObject> 採番されたオブジェクトID
+   */
+  inline TypedObjectId<TextObject> createRightAlignedText(BinaryGFX &gfx, int16_t x, int16_t y, const char *text,
+                                                          uint16_t width = 0,
+                                                          const FontData *font = &BgfxFont_Ascii,
+                                                          PixelState pixelState = PixelState::On, int16_t z = 0) {
+    auto obj = std::make_unique<TextObject>(x, y, text, font, pixelState, z);
+    obj->setWidth(width);
+    obj->setAlign(TextAlign::Right);
+    return gfx.addObject(std::move(obj));
+  }
+
+  /**
+   * @brief 中央揃えのStringオブジェクトを生成し追加する
+   *
+   * @param gfx        追加先のBinaryGFXインスタンス
+   * @param x          描画開始X座標（左上基準）
+   * @param y          描画開始Y座標（左上基準）
+   * @param string     表示文字列
+   * @param width      揃えの基準幅（デフォルト: 0＝x座標〜フレームバッファ右端まで自動）
+   * @param font       使用フォント（所有権なし）
+   * @param pixelState 描画色（デフォルト: 点灯）
+   * @param z          Z値（デフォルト: 0）
+   * @return TypedObjectId<StringObject> 採番されたオブジェクトID
+   */
+  inline TypedObjectId<StringObject> createCenteredString(BinaryGFX &gfx, int16_t x, int16_t y, std::string string,
+                                                          uint16_t width = 0,
+                                                          const FontData *font = &BgfxFont_Ascii,
+                                                          PixelState pixelState = PixelState::On, int16_t z = 0) {
+    auto obj = std::make_unique<StringObject>(x, y, std::move(string), font, pixelState, z);
+    obj->setWidth(width);
+    obj->setAlign(TextAlign::Center);
+    return gfx.addObject(std::move(obj));
+  }
+
+  /**
+   * @brief 右揃えのStringオブジェクトを生成し追加する
+   *
+   * @param gfx        追加先のBinaryGFXインスタンス
+   * @param x          描画開始X座標（左上基準）
+   * @param y          描画開始Y座標（左上基準）
+   * @param string     表示文字列
+   * @param width      揃えの基準幅（デフォルト: 0＝x座標〜フレームバッファ右端まで自動）
+   * @param font       使用フォント（所有権なし）
+   * @param pixelState 描画色（デフォルト: 点灯）
+   * @param z          Z値（デフォルト: 0）
+   * @return TypedObjectId<StringObject> 採番されたオブジェクトID
+   */
+  inline TypedObjectId<StringObject> createRightAlignedString(BinaryGFX &gfx, int16_t x, int16_t y, std::string string,
+                                                              uint16_t width = 0,
+                                                              const FontData *font = &BgfxFont_Ascii,
+                                                              PixelState pixelState = PixelState::On, int16_t z = 0) {
+    auto obj = std::make_unique<StringObject>(x, y, std::move(string), font, pixelState, z);
+    obj->setWidth(width);
+    obj->setAlign(TextAlign::Right);
+    return gfx.addObject(std::move(obj));
+  }
+
+  /**
    * @brief バイナリ画像オブジェクトを生成し追加する
    *
    * @param gfx        追加先のBinaryGFXインスタンス
